@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LifeAgent</string>
+    <string name="accessibility_description">LifeAgent 手机操作助手：读取屏幕控件树并自动操作生活服务 App（点外卖等），到待支付页停下，支付由本人完成。仅在执行任务时使用。</string>
+</resources>

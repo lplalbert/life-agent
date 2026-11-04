@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.LifeAgent" parent="@android:style/Theme.Material.Light" />
+
+    <!-- 半透明确认弹窗：覆盖在目标应用上，不遮挡底层界面 -->
+    <style name="Theme.LifeAgent.Translucent" parent="@android:style/Theme.Material.Dialog.Alert">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+    </style>
+</resources>

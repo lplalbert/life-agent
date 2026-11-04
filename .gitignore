@@ -1,0 +1,12 @@
+.venv/
+runs/
+__pycache__/
+*.pyc
+.env
+
+# 本地工具链（1.3G，README 指引自行准备）
+toolchain/
+# 第三方二进制（ADBKeyboard 等）不入库，从上游获取
+*.apk
+*.jks
+*.keystore
