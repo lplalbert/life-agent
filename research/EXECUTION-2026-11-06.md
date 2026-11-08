@@ -450,6 +450,8 @@ arXiv 检索（经 7892 代理）发现相邻工作密集，直接影响新颖�
 
 **归因类**：环境故障（模拟器系统假死）——ANR、感知竞态、网络通路之后第四实证。30 条失败留档零 token 损失，续跑自动重试。
 
+**续跑再现与 GPU 后端切换（同日）**：重启后续跑 30 条再度全挂，但故障变形——`app 未取得前台焦点`（新就绪闸正确拦下，零 token）；手诊发现 **systemui ANR 弹窗抢占 mCurrentFocus**（research-env 实为 topResumedActivity，app 无责），back 键/force-stop systemui 均无效，host GPU ColorBuffer 崩溃风暴为拖垮源。处置：**模拟器 GPU 后端 `-gpu host` → `-gpu swiftshader_indirect`（软件渲染）**——guest 可见证据路径（screencap 帧缓冲、UI dump）不变，仅 host 渲染后端；启动参数变化在此留痕。验收口径三则补钉：①服务陆续注册，`service check activity` found 早于 window/package，须三者齐；②FallbackHome 临时桌面阶段 `am start` 报 Error type 3（PMS 未暴露组件），非安装损坏；③须等真 launcher 接管 + `sys.boot_completed=1` 后拉起 app 至焦点确认。
+
 ## 下一执行顺序
 
 1. 【完成】阶段 C：运行级 JSONL、成功后重试修正、冻结经验与三种上下文策略；请求协议和敏感动作边界验证。
