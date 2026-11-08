@@ -72,6 +72,8 @@ def main(argv: list | None = None) -> int:
     parser.add_argument("--model", default=None)
     parser.add_argument("--out", type=Path, default=ROOT / "runs" / "episodes")
     parser.add_argument("--no-resume", action="store_true", help="不跳过已完成 episode")
+    parser.add_argument("--retry-invalid", action="store_true",
+                        help="重试 invalid_reset 的 episode（默认留档不重跑）")
     args = parser.parse_args(argv)
 
     fams = tuple(s for s in (args.families or "").split(",") if s) or None
@@ -102,13 +104,16 @@ def main(argv: list | None = None) -> int:
     ran, skipped, failed = [], [], []
     t_all = time.time()
 
+    # 续跑口径与 pilot_runner 一致：live 不把 dry_reset_ok 当完成（同名目录
+    # dry-run 后可直接上真跑）；invalid_reset 默认留档不静默重跑。
+    done_status = ("completed", "dry_reset_ok") if args.dry_reset else ("completed",)
     for idx, ep in enumerate(eps, 1):
         spec, policy = ep["spec"], ep["policy"]
         ep_dir = Path(args.out) / ep["episode_id"]
         prev = ep_dir / "episode.json"
         if prev.exists() and not args.no_resume:
             status = json.loads(prev.read_text(encoding="utf-8")).get("status")
-            if status in ("completed", "dry_reset_ok") or status == "invalid_reset":
+            if status in done_status or (status == "invalid_reset" and not args.retry_invalid):
                 skipped.append((ep["episode_id"], status))
                 continue
 
