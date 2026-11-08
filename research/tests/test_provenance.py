@@ -10,7 +10,7 @@ if str(ROOT) not in sys.path:
 
 from life_agent.provenance import (MIN_VALUE_CHARS, ProvenanceFinding, StepEvidence,
                                    TextBlock, check_value, find_substantiation,
-                                   rank_review_candidates)
+                                   format_gate_response, rank_review_candidates)
 from dataclasses import FrozenInstanceError
 
 
@@ -104,6 +104,33 @@ class GateDecision(unittest.TestCase):
         self.assertIsInstance(f, ProvenanceFinding)
         with self.assertRaises(FrozenInstanceError):
             f.trigger = False
+
+
+class GateResponseText(unittest.TestCase):
+    def test_names_value_and_review_path_without_answers(self):
+        f = check_value("W3JG", [ui(0, "商品列表")],
+                        [StepEvidence(0, True, retained=False, distilled=True,
+                                      summary_text="列表页")])
+        msg = format_gate_response(f)
+        self.assertIn("W3JG", msg)                  # 提交值原样回显（agent 自己的输入）
+        self.assertIn("review_screenshot", msg)     # 指路取证
+        self.assertIn("第 0 步", msg)
+        self.assertIn("已蒸馏但摘要缺值", msg)
+
+    def test_candidate_list_is_capped_with_omission_note(self):
+        steps = [StepEvidence(i, True, retained=False, distilled=False)
+                 for i in range(8)]
+        f = check_value("WXYZ", [], steps)
+        msg = format_gate_response(f, max_steps=3)
+        self.assertIn("第 7 步", msg)                # 新→旧取前 3
+        self.assertNotIn("第 4 步", msg)
+        self.assertIn("另有 5 步候选未列出", msg)
+
+    def test_never_injects_ground_truth(self):
+        f = check_value("WXYZ", [], [])
+        msg = format_gate_response(f)
+        for leak in ("promo", "优惠码", "expected", "fault"):
+            self.assertNotIn(leak, msg)
 
 
 if __name__ == "__main__":
