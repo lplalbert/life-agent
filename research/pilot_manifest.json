@@ -1,0 +1,4232 @@
+[
+  {
+    "episode_id": "i01-c0-full",
+    "instance": "i01",
+    "family": "F1",
+    "condition": "c0",
+    "policy": "full",
+    "reset": {
+      "episode": "i01-c0-full",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i01-c0-recent",
+    "instance": "i01",
+    "family": "F1",
+    "condition": "c0",
+    "policy": "recent",
+    "reset": {
+      "episode": "i01-c0-recent",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i01-c0-evidence",
+    "instance": "i01",
+    "family": "F1",
+    "condition": "c0",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i01-c0-evidence",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i01-c1-full",
+    "instance": "i01",
+    "family": "F1",
+    "condition": "c1",
+    "policy": "full",
+    "reset": {
+      "episode": "i01-c1-full",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i01-c1-recent",
+    "instance": "i01",
+    "family": "F1",
+    "condition": "c1",
+    "policy": "recent",
+    "reset": {
+      "episode": "i01-c1-recent",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i01-c1-evidence",
+    "instance": "i01",
+    "family": "F1",
+    "condition": "c1",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i01-c1-evidence",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i01-c2-full",
+    "instance": "i01",
+    "family": "F1",
+    "condition": "c2",
+    "policy": "full",
+    "reset": {
+      "episode": "i01-c2-full",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i01-c2-recent",
+    "instance": "i01",
+    "family": "F1",
+    "condition": "c2",
+    "policy": "recent",
+    "reset": {
+      "episode": "i01-c2-recent",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i01-c2-evidence",
+    "instance": "i01",
+    "family": "F1",
+    "condition": "c2",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i01-c2-evidence",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i01-c3-full",
+    "instance": "i01",
+    "family": "F1",
+    "condition": "c3",
+    "policy": "full",
+    "reset": {
+      "episode": "i01-c3-full",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i01-c3-recent",
+    "instance": "i01",
+    "family": "F1",
+    "condition": "c3",
+    "policy": "recent",
+    "reset": {
+      "episode": "i01-c3-recent",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i01-c3-evidence",
+    "instance": "i01",
+    "family": "F1",
+    "condition": "c3",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i01-c3-evidence",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i01-c4-full",
+    "instance": "i01",
+    "family": "F1",
+    "condition": "c4",
+    "policy": "full",
+    "reset": {
+      "episode": "i01-c4-full",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i01-c4-recent",
+    "instance": "i01",
+    "family": "F1",
+    "condition": "c4",
+    "policy": "recent",
+    "reset": {
+      "episode": "i01-c4-recent",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i01-c4-evidence",
+    "instance": "i01",
+    "family": "F1",
+    "condition": "c4",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i01-c4-evidence",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i02-c0-full",
+    "instance": "i02",
+    "family": "F1",
+    "condition": "c0",
+    "policy": "full",
+    "reset": {
+      "episode": "i02-c0-full",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i02-c0-recent",
+    "instance": "i02",
+    "family": "F1",
+    "condition": "c0",
+    "policy": "recent",
+    "reset": {
+      "episode": "i02-c0-recent",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i02-c0-evidence",
+    "instance": "i02",
+    "family": "F1",
+    "condition": "c0",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i02-c0-evidence",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i02-c1-full",
+    "instance": "i02",
+    "family": "F1",
+    "condition": "c1",
+    "policy": "full",
+    "reset": {
+      "episode": "i02-c1-full",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i02-c1-recent",
+    "instance": "i02",
+    "family": "F1",
+    "condition": "c1",
+    "policy": "recent",
+    "reset": {
+      "episode": "i02-c1-recent",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i02-c1-evidence",
+    "instance": "i02",
+    "family": "F1",
+    "condition": "c1",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i02-c1-evidence",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i02-c2-full",
+    "instance": "i02",
+    "family": "F1",
+    "condition": "c2",
+    "policy": "full",
+    "reset": {
+      "episode": "i02-c2-full",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i02-c2-recent",
+    "instance": "i02",
+    "family": "F1",
+    "condition": "c2",
+    "policy": "recent",
+    "reset": {
+      "episode": "i02-c2-recent",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i02-c2-evidence",
+    "instance": "i02",
+    "family": "F1",
+    "condition": "c2",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i02-c2-evidence",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i02-c3-full",
+    "instance": "i02",
+    "family": "F1",
+    "condition": "c3",
+    "policy": "full",
+    "reset": {
+      "episode": "i02-c3-full",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i02-c3-recent",
+    "instance": "i02",
+    "family": "F1",
+    "condition": "c3",
+    "policy": "recent",
+    "reset": {
+      "episode": "i02-c3-recent",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i02-c3-evidence",
+    "instance": "i02",
+    "family": "F1",
+    "condition": "c3",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i02-c3-evidence",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i02-c4-full",
+    "instance": "i02",
+    "family": "F1",
+    "condition": "c4",
+    "policy": "full",
+    "reset": {
+      "episode": "i02-c4-full",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i02-c4-recent",
+    "instance": "i02",
+    "family": "F1",
+    "condition": "c4",
+    "policy": "recent",
+    "reset": {
+      "episode": "i02-c4-recent",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i02-c4-evidence",
+    "instance": "i02",
+    "family": "F1",
+    "condition": "c4",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i02-c4-evidence",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i03-c0-full",
+    "instance": "i03",
+    "family": "F1",
+    "condition": "c0",
+    "policy": "full",
+    "reset": {
+      "episode": "i03-c0-full",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i03-c0-recent",
+    "instance": "i03",
+    "family": "F1",
+    "condition": "c0",
+    "policy": "recent",
+    "reset": {
+      "episode": "i03-c0-recent",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i03-c0-evidence",
+    "instance": "i03",
+    "family": "F1",
+    "condition": "c0",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i03-c0-evidence",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i03-c1-full",
+    "instance": "i03",
+    "family": "F1",
+    "condition": "c1",
+    "policy": "full",
+    "reset": {
+      "episode": "i03-c1-full",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i03-c1-recent",
+    "instance": "i03",
+    "family": "F1",
+    "condition": "c1",
+    "policy": "recent",
+    "reset": {
+      "episode": "i03-c1-recent",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i03-c1-evidence",
+    "instance": "i03",
+    "family": "F1",
+    "condition": "c1",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i03-c1-evidence",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i03-c2-full",
+    "instance": "i03",
+    "family": "F1",
+    "condition": "c2",
+    "policy": "full",
+    "reset": {
+      "episode": "i03-c2-full",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i03-c2-recent",
+    "instance": "i03",
+    "family": "F1",
+    "condition": "c2",
+    "policy": "recent",
+    "reset": {
+      "episode": "i03-c2-recent",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i03-c2-evidence",
+    "instance": "i03",
+    "family": "F1",
+    "condition": "c2",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i03-c2-evidence",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i03-c3-full",
+    "instance": "i03",
+    "family": "F1",
+    "condition": "c3",
+    "policy": "full",
+    "reset": {
+      "episode": "i03-c3-full",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i03-c3-recent",
+    "instance": "i03",
+    "family": "F1",
+    "condition": "c3",
+    "policy": "recent",
+    "reset": {
+      "episode": "i03-c3-recent",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i03-c3-evidence",
+    "instance": "i03",
+    "family": "F1",
+    "condition": "c3",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i03-c3-evidence",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i03-c4-full",
+    "instance": "i03",
+    "family": "F1",
+    "condition": "c4",
+    "policy": "full",
+    "reset": {
+      "episode": "i03-c4-full",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i03-c4-recent",
+    "instance": "i03",
+    "family": "F1",
+    "condition": "c4",
+    "policy": "recent",
+    "reset": {
+      "episode": "i03-c4-recent",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i03-c4-evidence",
+    "instance": "i03",
+    "family": "F1",
+    "condition": "c4",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i03-c4-evidence",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p1"
+      ],
+      "initial_cart": [
+        "p2"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i04-c0-full",
+    "instance": "i04",
+    "family": "F2",
+    "condition": "c0",
+    "policy": "full",
+    "reset": {
+      "episode": "i04-c0-full",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i04-c0-recent",
+    "instance": "i04",
+    "family": "F2",
+    "condition": "c0",
+    "policy": "recent",
+    "reset": {
+      "episode": "i04-c0-recent",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i04-c0-evidence",
+    "instance": "i04",
+    "family": "F2",
+    "condition": "c0",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i04-c0-evidence",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i04-c1-full",
+    "instance": "i04",
+    "family": "F2",
+    "condition": "c1",
+    "policy": "full",
+    "reset": {
+      "episode": "i04-c1-full",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i04-c1-recent",
+    "instance": "i04",
+    "family": "F2",
+    "condition": "c1",
+    "policy": "recent",
+    "reset": {
+      "episode": "i04-c1-recent",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i04-c1-evidence",
+    "instance": "i04",
+    "family": "F2",
+    "condition": "c1",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i04-c1-evidence",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i04-c2-full",
+    "instance": "i04",
+    "family": "F2",
+    "condition": "c2",
+    "policy": "full",
+    "reset": {
+      "episode": "i04-c2-full",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i04-c2-recent",
+    "instance": "i04",
+    "family": "F2",
+    "condition": "c2",
+    "policy": "recent",
+    "reset": {
+      "episode": "i04-c2-recent",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i04-c2-evidence",
+    "instance": "i04",
+    "family": "F2",
+    "condition": "c2",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i04-c2-evidence",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i04-c3-full",
+    "instance": "i04",
+    "family": "F2",
+    "condition": "c3",
+    "policy": "full",
+    "reset": {
+      "episode": "i04-c3-full",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i04-c3-recent",
+    "instance": "i04",
+    "family": "F2",
+    "condition": "c3",
+    "policy": "recent",
+    "reset": {
+      "episode": "i04-c3-recent",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i04-c3-evidence",
+    "instance": "i04",
+    "family": "F2",
+    "condition": "c3",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i04-c3-evidence",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i04-c4-full",
+    "instance": "i04",
+    "family": "F2",
+    "condition": "c4",
+    "policy": "full",
+    "reset": {
+      "episode": "i04-c4-full",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i04-c4-recent",
+    "instance": "i04",
+    "family": "F2",
+    "condition": "c4",
+    "policy": "recent",
+    "reset": {
+      "episode": "i04-c4-recent",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i04-c4-evidence",
+    "instance": "i04",
+    "family": "F2",
+    "condition": "c4",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i04-c4-evidence",
+      "task_seed": 1,
+      "fault_seed": 1,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i05-c0-full",
+    "instance": "i05",
+    "family": "F2",
+    "condition": "c0",
+    "policy": "full",
+    "reset": {
+      "episode": "i05-c0-full",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p4"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i05-c0-recent",
+    "instance": "i05",
+    "family": "F2",
+    "condition": "c0",
+    "policy": "recent",
+    "reset": {
+      "episode": "i05-c0-recent",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p4"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i05-c0-evidence",
+    "instance": "i05",
+    "family": "F2",
+    "condition": "c0",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i05-c0-evidence",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p4"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i05-c1-full",
+    "instance": "i05",
+    "family": "F2",
+    "condition": "c1",
+    "policy": "full",
+    "reset": {
+      "episode": "i05-c1-full",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p4"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i05-c1-recent",
+    "instance": "i05",
+    "family": "F2",
+    "condition": "c1",
+    "policy": "recent",
+    "reset": {
+      "episode": "i05-c1-recent",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p4"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i05-c1-evidence",
+    "instance": "i05",
+    "family": "F2",
+    "condition": "c1",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i05-c1-evidence",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p4"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i05-c2-full",
+    "instance": "i05",
+    "family": "F2",
+    "condition": "c2",
+    "policy": "full",
+    "reset": {
+      "episode": "i05-c2-full",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p4"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i05-c2-recent",
+    "instance": "i05",
+    "family": "F2",
+    "condition": "c2",
+    "policy": "recent",
+    "reset": {
+      "episode": "i05-c2-recent",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p4"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i05-c2-evidence",
+    "instance": "i05",
+    "family": "F2",
+    "condition": "c2",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i05-c2-evidence",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p4"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i05-c3-full",
+    "instance": "i05",
+    "family": "F2",
+    "condition": "c3",
+    "policy": "full",
+    "reset": {
+      "episode": "i05-c3-full",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p4"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i05-c3-recent",
+    "instance": "i05",
+    "family": "F2",
+    "condition": "c3",
+    "policy": "recent",
+    "reset": {
+      "episode": "i05-c3-recent",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p4"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i05-c3-evidence",
+    "instance": "i05",
+    "family": "F2",
+    "condition": "c3",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i05-c3-evidence",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p4"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i05-c4-full",
+    "instance": "i05",
+    "family": "F2",
+    "condition": "c4",
+    "policy": "full",
+    "reset": {
+      "episode": "i05-c4-full",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p4"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i05-c4-recent",
+    "instance": "i05",
+    "family": "F2",
+    "condition": "c4",
+    "policy": "recent",
+    "reset": {
+      "episode": "i05-c4-recent",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p4"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i05-c4-evidence",
+    "instance": "i05",
+    "family": "F2",
+    "condition": "c4",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i05-c4-evidence",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p4"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i06-c0-full",
+    "instance": "i06",
+    "family": "F2",
+    "condition": "c0",
+    "policy": "full",
+    "reset": {
+      "episode": "i06-c0-full",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i06-c0-recent",
+    "instance": "i06",
+    "family": "F2",
+    "condition": "c0",
+    "policy": "recent",
+    "reset": {
+      "episode": "i06-c0-recent",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i06-c0-evidence",
+    "instance": "i06",
+    "family": "F2",
+    "condition": "c0",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i06-c0-evidence",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i06-c1-full",
+    "instance": "i06",
+    "family": "F2",
+    "condition": "c1",
+    "policy": "full",
+    "reset": {
+      "episode": "i06-c1-full",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i06-c1-recent",
+    "instance": "i06",
+    "family": "F2",
+    "condition": "c1",
+    "policy": "recent",
+    "reset": {
+      "episode": "i06-c1-recent",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i06-c1-evidence",
+    "instance": "i06",
+    "family": "F2",
+    "condition": "c1",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i06-c1-evidence",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i06-c2-full",
+    "instance": "i06",
+    "family": "F2",
+    "condition": "c2",
+    "policy": "full",
+    "reset": {
+      "episode": "i06-c2-full",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i06-c2-recent",
+    "instance": "i06",
+    "family": "F2",
+    "condition": "c2",
+    "policy": "recent",
+    "reset": {
+      "episode": "i06-c2-recent",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i06-c2-evidence",
+    "instance": "i06",
+    "family": "F2",
+    "condition": "c2",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i06-c2-evidence",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i06-c3-full",
+    "instance": "i06",
+    "family": "F2",
+    "condition": "c3",
+    "policy": "full",
+    "reset": {
+      "episode": "i06-c3-full",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i06-c3-recent",
+    "instance": "i06",
+    "family": "F2",
+    "condition": "c3",
+    "policy": "recent",
+    "reset": {
+      "episode": "i06-c3-recent",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i06-c3-evidence",
+    "instance": "i06",
+    "family": "F2",
+    "condition": "c3",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i06-c3-evidence",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i06-c4-full",
+    "instance": "i06",
+    "family": "F2",
+    "condition": "c4",
+    "policy": "full",
+    "reset": {
+      "episode": "i06-c4-full",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i06-c4-recent",
+    "instance": "i06",
+    "family": "F2",
+    "condition": "c4",
+    "policy": "recent",
+    "reset": {
+      "episode": "i06-c4-recent",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i06-c4-evidence",
+    "instance": "i06",
+    "family": "F2",
+    "condition": "c4",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i06-c4-evidence",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p1",
+        "p2"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i07-c0-full",
+    "instance": "i07",
+    "family": "F3",
+    "condition": "c0",
+    "policy": "full",
+    "reset": {
+      "episode": "i07-c0-full",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i07-c0-recent",
+    "instance": "i07",
+    "family": "F3",
+    "condition": "c0",
+    "policy": "recent",
+    "reset": {
+      "episode": "i07-c0-recent",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i07-c0-evidence",
+    "instance": "i07",
+    "family": "F3",
+    "condition": "c0",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i07-c0-evidence",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i07-c1-full",
+    "instance": "i07",
+    "family": "F3",
+    "condition": "c1",
+    "policy": "full",
+    "reset": {
+      "episode": "i07-c1-full",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i07-c1-recent",
+    "instance": "i07",
+    "family": "F3",
+    "condition": "c1",
+    "policy": "recent",
+    "reset": {
+      "episode": "i07-c1-recent",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i07-c1-evidence",
+    "instance": "i07",
+    "family": "F3",
+    "condition": "c1",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i07-c1-evidence",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i07-c2-full",
+    "instance": "i07",
+    "family": "F3",
+    "condition": "c2",
+    "policy": "full",
+    "reset": {
+      "episode": "i07-c2-full",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i07-c2-recent",
+    "instance": "i07",
+    "family": "F3",
+    "condition": "c2",
+    "policy": "recent",
+    "reset": {
+      "episode": "i07-c2-recent",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i07-c2-evidence",
+    "instance": "i07",
+    "family": "F3",
+    "condition": "c2",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i07-c2-evidence",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i07-c3-full",
+    "instance": "i07",
+    "family": "F3",
+    "condition": "c3",
+    "policy": "full",
+    "reset": {
+      "episode": "i07-c3-full",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i07-c3-recent",
+    "instance": "i07",
+    "family": "F3",
+    "condition": "c3",
+    "policy": "recent",
+    "reset": {
+      "episode": "i07-c3-recent",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i07-c3-evidence",
+    "instance": "i07",
+    "family": "F3",
+    "condition": "c3",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i07-c3-evidence",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i07-c4-full",
+    "instance": "i07",
+    "family": "F3",
+    "condition": "c4",
+    "policy": "full",
+    "reset": {
+      "episode": "i07-c4-full",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i07-c4-recent",
+    "instance": "i07",
+    "family": "F3",
+    "condition": "c4",
+    "policy": "recent",
+    "reset": {
+      "episode": "i07-c4-recent",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i07-c4-evidence",
+    "instance": "i07",
+    "family": "F3",
+    "condition": "c4",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i07-c4-evidence",
+      "task_seed": 2,
+      "fault_seed": 2,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i08-c0-full",
+    "instance": "i08",
+    "family": "F3",
+    "condition": "c0",
+    "policy": "full",
+    "reset": {
+      "episode": "i08-c0-full",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i08-c0-recent",
+    "instance": "i08",
+    "family": "F3",
+    "condition": "c0",
+    "policy": "recent",
+    "reset": {
+      "episode": "i08-c0-recent",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i08-c0-evidence",
+    "instance": "i08",
+    "family": "F3",
+    "condition": "c0",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i08-c0-evidence",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i08-c1-full",
+    "instance": "i08",
+    "family": "F3",
+    "condition": "c1",
+    "policy": "full",
+    "reset": {
+      "episode": "i08-c1-full",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i08-c1-recent",
+    "instance": "i08",
+    "family": "F3",
+    "condition": "c1",
+    "policy": "recent",
+    "reset": {
+      "episode": "i08-c1-recent",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i08-c1-evidence",
+    "instance": "i08",
+    "family": "F3",
+    "condition": "c1",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i08-c1-evidence",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i08-c2-full",
+    "instance": "i08",
+    "family": "F3",
+    "condition": "c2",
+    "policy": "full",
+    "reset": {
+      "episode": "i08-c2-full",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i08-c2-recent",
+    "instance": "i08",
+    "family": "F3",
+    "condition": "c2",
+    "policy": "recent",
+    "reset": {
+      "episode": "i08-c2-recent",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i08-c2-evidence",
+    "instance": "i08",
+    "family": "F3",
+    "condition": "c2",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i08-c2-evidence",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i08-c3-full",
+    "instance": "i08",
+    "family": "F3",
+    "condition": "c3",
+    "policy": "full",
+    "reset": {
+      "episode": "i08-c3-full",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i08-c3-recent",
+    "instance": "i08",
+    "family": "F3",
+    "condition": "c3",
+    "policy": "recent",
+    "reset": {
+      "episode": "i08-c3-recent",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i08-c3-evidence",
+    "instance": "i08",
+    "family": "F3",
+    "condition": "c3",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i08-c3-evidence",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i08-c4-full",
+    "instance": "i08",
+    "family": "F3",
+    "condition": "c4",
+    "policy": "full",
+    "reset": {
+      "episode": "i08-c4-full",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i08-c4-recent",
+    "instance": "i08",
+    "family": "F3",
+    "condition": "c4",
+    "policy": "recent",
+    "reset": {
+      "episode": "i08-c4-recent",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i08-c4-evidence",
+    "instance": "i08",
+    "family": "F3",
+    "condition": "c4",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i08-c4-evidence",
+      "task_seed": 4,
+      "fault_seed": 4,
+      "expected_ids": [
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i09-c0-full",
+    "instance": "i09",
+    "family": "F3",
+    "condition": "c0",
+    "policy": "full",
+    "reset": {
+      "episode": "i09-c0-full",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i09-c0-recent",
+    "instance": "i09",
+    "family": "F3",
+    "condition": "c0",
+    "policy": "recent",
+    "reset": {
+      "episode": "i09-c0-recent",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i09-c0-evidence",
+    "instance": "i09",
+    "family": "F3",
+    "condition": "c0",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i09-c0-evidence",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i09-c1-full",
+    "instance": "i09",
+    "family": "F3",
+    "condition": "c1",
+    "policy": "full",
+    "reset": {
+      "episode": "i09-c1-full",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i09-c1-recent",
+    "instance": "i09",
+    "family": "F3",
+    "condition": "c1",
+    "policy": "recent",
+    "reset": {
+      "episode": "i09-c1-recent",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i09-c1-evidence",
+    "instance": "i09",
+    "family": "F3",
+    "condition": "c1",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i09-c1-evidence",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i09-c2-full",
+    "instance": "i09",
+    "family": "F3",
+    "condition": "c2",
+    "policy": "full",
+    "reset": {
+      "episode": "i09-c2-full",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i09-c2-recent",
+    "instance": "i09",
+    "family": "F3",
+    "condition": "c2",
+    "policy": "recent",
+    "reset": {
+      "episode": "i09-c2-recent",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i09-c2-evidence",
+    "instance": "i09",
+    "family": "F3",
+    "condition": "c2",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i09-c2-evidence",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i09-c3-full",
+    "instance": "i09",
+    "family": "F3",
+    "condition": "c3",
+    "policy": "full",
+    "reset": {
+      "episode": "i09-c3-full",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i09-c3-recent",
+    "instance": "i09",
+    "family": "F3",
+    "condition": "c3",
+    "policy": "recent",
+    "reset": {
+      "episode": "i09-c3-recent",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i09-c3-evidence",
+    "instance": "i09",
+    "family": "F3",
+    "condition": "c3",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i09-c3-evidence",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i09-c4-full",
+    "instance": "i09",
+    "family": "F3",
+    "condition": "c4",
+    "policy": "full",
+    "reset": {
+      "episode": "i09-c4-full",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i09-c4-recent",
+    "instance": "i09",
+    "family": "F3",
+    "condition": "c4",
+    "policy": "recent",
+    "reset": {
+      "episode": "i09-c4-recent",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i09-c4-evidence",
+    "instance": "i09",
+    "family": "F3",
+    "condition": "c4",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i09-c4-evidence",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p3"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i10-c0-full",
+    "instance": "i10",
+    "family": "F4",
+    "condition": "c0",
+    "policy": "full",
+    "reset": {
+      "episode": "i10-c0-full",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i10-c0-recent",
+    "instance": "i10",
+    "family": "F4",
+    "condition": "c0",
+    "policy": "recent",
+    "reset": {
+      "episode": "i10-c0-recent",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i10-c0-evidence",
+    "instance": "i10",
+    "family": "F4",
+    "condition": "c0",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i10-c0-evidence",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i10-c1-full",
+    "instance": "i10",
+    "family": "F4",
+    "condition": "c1",
+    "policy": "full",
+    "reset": {
+      "episode": "i10-c1-full",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i10-c1-recent",
+    "instance": "i10",
+    "family": "F4",
+    "condition": "c1",
+    "policy": "recent",
+    "reset": {
+      "episode": "i10-c1-recent",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i10-c1-evidence",
+    "instance": "i10",
+    "family": "F4",
+    "condition": "c1",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i10-c1-evidence",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i10-c2-full",
+    "instance": "i10",
+    "family": "F4",
+    "condition": "c2",
+    "policy": "full",
+    "reset": {
+      "episode": "i10-c2-full",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i10-c2-recent",
+    "instance": "i10",
+    "family": "F4",
+    "condition": "c2",
+    "policy": "recent",
+    "reset": {
+      "episode": "i10-c2-recent",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i10-c2-evidence",
+    "instance": "i10",
+    "family": "F4",
+    "condition": "c2",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i10-c2-evidence",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i10-c3-full",
+    "instance": "i10",
+    "family": "F4",
+    "condition": "c3",
+    "policy": "full",
+    "reset": {
+      "episode": "i10-c3-full",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i10-c3-recent",
+    "instance": "i10",
+    "family": "F4",
+    "condition": "c3",
+    "policy": "recent",
+    "reset": {
+      "episode": "i10-c3-recent",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i10-c3-evidence",
+    "instance": "i10",
+    "family": "F4",
+    "condition": "c3",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i10-c3-evidence",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i10-c4-full",
+    "instance": "i10",
+    "family": "F4",
+    "condition": "c4",
+    "policy": "full",
+    "reset": {
+      "episode": "i10-c4-full",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i10-c4-recent",
+    "instance": "i10",
+    "family": "F4",
+    "condition": "c4",
+    "policy": "recent",
+    "reset": {
+      "episode": "i10-c4-recent",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i10-c4-evidence",
+    "instance": "i10",
+    "family": "F4",
+    "condition": "c4",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i10-c4-evidence",
+      "task_seed": 3,
+      "fault_seed": 3,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i11-c0-full",
+    "instance": "i11",
+    "family": "F4",
+    "condition": "c0",
+    "policy": "full",
+    "reset": {
+      "episode": "i11-c0-full",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i11-c0-recent",
+    "instance": "i11",
+    "family": "F4",
+    "condition": "c0",
+    "policy": "recent",
+    "reset": {
+      "episode": "i11-c0-recent",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i11-c0-evidence",
+    "instance": "i11",
+    "family": "F4",
+    "condition": "c0",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i11-c0-evidence",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i11-c1-full",
+    "instance": "i11",
+    "family": "F4",
+    "condition": "c1",
+    "policy": "full",
+    "reset": {
+      "episode": "i11-c1-full",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i11-c1-recent",
+    "instance": "i11",
+    "family": "F4",
+    "condition": "c1",
+    "policy": "recent",
+    "reset": {
+      "episode": "i11-c1-recent",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i11-c1-evidence",
+    "instance": "i11",
+    "family": "F4",
+    "condition": "c1",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i11-c1-evidence",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i11-c2-full",
+    "instance": "i11",
+    "family": "F4",
+    "condition": "c2",
+    "policy": "full",
+    "reset": {
+      "episode": "i11-c2-full",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i11-c2-recent",
+    "instance": "i11",
+    "family": "F4",
+    "condition": "c2",
+    "policy": "recent",
+    "reset": {
+      "episode": "i11-c2-recent",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i11-c2-evidence",
+    "instance": "i11",
+    "family": "F4",
+    "condition": "c2",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i11-c2-evidence",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i11-c3-full",
+    "instance": "i11",
+    "family": "F4",
+    "condition": "c3",
+    "policy": "full",
+    "reset": {
+      "episode": "i11-c3-full",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i11-c3-recent",
+    "instance": "i11",
+    "family": "F4",
+    "condition": "c3",
+    "policy": "recent",
+    "reset": {
+      "episode": "i11-c3-recent",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i11-c3-evidence",
+    "instance": "i11",
+    "family": "F4",
+    "condition": "c3",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i11-c3-evidence",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i11-c4-full",
+    "instance": "i11",
+    "family": "F4",
+    "condition": "c4",
+    "policy": "full",
+    "reset": {
+      "episode": "i11-c4-full",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i11-c4-recent",
+    "instance": "i11",
+    "family": "F4",
+    "condition": "c4",
+    "policy": "recent",
+    "reset": {
+      "episode": "i11-c4-recent",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i11-c4-evidence",
+    "instance": "i11",
+    "family": "F4",
+    "condition": "c4",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i11-c4-evidence",
+      "task_seed": 5,
+      "fault_seed": 5,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p1"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i12-c0-full",
+    "instance": "i12",
+    "family": "F4",
+    "condition": "c0",
+    "policy": "full",
+    "reset": {
+      "episode": "i12-c0-full",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i12-c0-recent",
+    "instance": "i12",
+    "family": "F4",
+    "condition": "c0",
+    "policy": "recent",
+    "reset": {
+      "episode": "i12-c0-recent",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i12-c0-evidence",
+    "instance": "i12",
+    "family": "F4",
+    "condition": "c0",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i12-c0-evidence",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "none"
+    }
+  },
+  {
+    "episode_id": "i12-c1-full",
+    "instance": "i12",
+    "family": "F4",
+    "condition": "c1",
+    "policy": "full",
+    "reset": {
+      "episode": "i12-c1-full",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i12-c1-recent",
+    "instance": "i12",
+    "family": "F4",
+    "condition": "c1",
+    "policy": "recent",
+    "reset": {
+      "episode": "i12-c1-recent",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i12-c1-evidence",
+    "instance": "i12",
+    "family": "F4",
+    "condition": "c1",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i12-c1-evidence",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": 3000,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "delay"
+    }
+  },
+  {
+    "episode_id": "i12-c2-full",
+    "instance": "i12",
+    "family": "F4",
+    "condition": "c2",
+    "policy": "full",
+    "reset": {
+      "episode": "i12-c2-full",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i12-c2-recent",
+    "instance": "i12",
+    "family": "F4",
+    "condition": "c2",
+    "policy": "recent",
+    "reset": {
+      "episode": "i12-c2-recent",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i12-c2-evidence",
+    "instance": "i12",
+    "family": "F4",
+    "condition": "c2",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i12-c2-evidence",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": 2,
+      "popup_at": null,
+      "confusion_at": null,
+      "fault": "noop"
+    }
+  },
+  {
+    "episode_id": "i12-c3-full",
+    "instance": "i12",
+    "family": "F4",
+    "condition": "c3",
+    "policy": "full",
+    "reset": {
+      "episode": "i12-c3-full",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i12-c3-recent",
+    "instance": "i12",
+    "family": "F4",
+    "condition": "c3",
+    "policy": "recent",
+    "reset": {
+      "episode": "i12-c3-recent",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i12-c3-evidence",
+    "instance": "i12",
+    "family": "F4",
+    "condition": "c3",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i12-c3-evidence",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": "enter_cart",
+      "confusion_at": null,
+      "fault": "popup"
+    }
+  },
+  {
+    "episode_id": "i12-c4-full",
+    "instance": "i12",
+    "family": "F4",
+    "condition": "c4",
+    "policy": "full",
+    "reset": {
+      "episode": "i12-c4-full",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i12-c4-recent",
+    "instance": "i12",
+    "family": "F4",
+    "condition": "c4",
+    "policy": "recent",
+    "reset": {
+      "episode": "i12-c4-recent",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  },
+  {
+    "episode_id": "i12-c4-evidence",
+    "instance": "i12",
+    "family": "F4",
+    "condition": "c4",
+    "policy": "evidence",
+    "reset": {
+      "episode": "i12-c4-evidence",
+      "task_seed": 6,
+      "fault_seed": 6,
+      "expected_ids": [
+        "p2",
+        "p4"
+      ],
+      "initial_cart": [
+        "p3"
+      ],
+      "delay_ms": null,
+      "noop_n": null,
+      "popup_at": null,
+      "confusion_at": "enter_cart",
+      "fault": "confusion"
+    }
+  }
+]

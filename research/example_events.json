@@ -1,0 +1,7 @@
+[
+  {"kind":"observation","step":0,"image_ref":"synthetic/step00.jpg"},
+  {"kind":"observation","step":1,"image_ref":"synthetic/step01.jpg"},
+  {"kind":"verification","step":1,"check_id":"navigation","source_steps":[0,1],"state":"pending"},
+  {"kind":"observation","step":2,"image_ref":"synthetic/step02.jpg"},
+  {"kind":"observation","step":3,"image_ref":"synthetic/step03.jpg"}
+]
