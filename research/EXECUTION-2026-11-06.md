@@ -452,6 +452,8 @@ arXiv 检索（经 7892 代理）发现相邻工作密集，直接影响新颖�
 
 **续跑再现与 GPU 后端切换（同日）**：重启后续跑 30 条再度全挂，但故障变形——`app 未取得前台焦点`（新就绪闸正确拦下，零 token）；手诊发现 **systemui ANR 弹窗抢占 mCurrentFocus**（research-env 实为 topResumedActivity，app 无责），back 键/force-stop systemui 均无效，host GPU ColorBuffer 崩溃风暴为拖垮源。处置：**模拟器 GPU 后端 `-gpu host` → `-gpu swiftshader_indirect`（软件渲染）**——guest 可见证据路径（screencap 帧缓冲、UI dump）不变，仅 host 渲染后端；启动参数变化在此留痕。验收口径三则补钉：①服务陆续注册，`service check activity` found 早于 window/package，须三者齐；②FallbackHome 临时桌面阶段 `am start` 报 Error type 3（PMS 未暴露组件），非安装损坏；③须等真 launcher 接管 + `sys.boot_completed=1` 后拉起 app 至焦点确认。
 
+**systemui 反复 ANR 与弹窗治理（同日）**：swiftshader 后续跑 30 条仍全挂同一闸——诊断序列（probe 复位→episode 复位→open_app）复现坐实：**systemui 反复 ANR、`Application Not Responding` 弹窗独占 mCurrentFocus**（app 始终 topResumed，焦点闸 fail-closed 正确拦下；back/enter/force-stop systemui 均无法关闭弹窗）。处置：`settings put global hide_error_dialogs 1`（headless 长跑环境隐藏系统错误对话框，ANR 事件照常入 logcat）+ `uiautomator dump` 定位「Close app」按钮 (540,1236) 点掉存量弹窗，焦点回 research-env，诊断序列 open_app 通过。教训两条：**焦点闸验收不能只看 topResumed——mCurrentFocus 可能被系统弹窗独占；headless 批跑环境须 hide_error_dialogs=1 并在批前清点存量弹窗**。
+
 ## 下一执行顺序
 
 1. 【完成】阶段 C：运行级 JSONL、成功后重试修正、冻结经验与三种上下文策略；请求协议和敏感动作边界验证。
