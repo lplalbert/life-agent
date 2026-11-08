@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "life-agent"
 include(":app")
+include(":research-env")

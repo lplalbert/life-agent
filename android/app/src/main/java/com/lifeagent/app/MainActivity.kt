@@ -3,6 +3,7 @@ package com.lifeagent.app
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.PowerManager
 import android.provider.Settings
 import android.view.Gravity
 import android.view.ViewGroup
@@ -32,6 +33,7 @@ class MainActivity : Activity() {
     private lateinit var autoConfirmBox: CheckBox
     private lateinit var logView: TextView
     private var running = false  // 防重入：模型误点「开始任务」或用户连点不会再开第二个循环
+    private var wakeLock: PowerManager.WakeLock? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,6 +102,7 @@ class MainActivity : Activity() {
             ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
 
         setContentView(root)
+        handleIntent(intent)
     }
 
     override fun onResume() {
@@ -111,6 +114,22 @@ class MainActivity : Activity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         refreshStatus()
+        handleIntent(intent)
+    }
+
+    /**
+     * 外部下发任务：adb shell am start -n com.lifeagent.app/.MainActivity --es task '...'
+     * 可选 --ez auto_confirm true 开启自动确认。取完即删，防屏幕旋转重复执行。
+     */
+    private fun handleIntent(intent: Intent?) {
+        if (intent == null) return
+        val task = intent.getStringExtra("task")?.trim().orEmpty()
+        if (task.isEmpty()) return
+        if (intent.getBooleanExtra("auto_confirm", false)) autoConfirmBox.isChecked = true
+        intent.removeExtra("task")
+        intent.removeExtra("auto_confirm")
+        taskInput.setText(task)
+        startTask()
     }
 
     private fun refreshStatus() {
@@ -141,17 +160,53 @@ class MainActivity : Activity() {
             appendLog("[X] 无障碍服务未运行：请先在系统设置里开启 LifeAgent")
             return
         }
-        val runDir = File(getExternalFilesDir(null), "runs/" + System.currentTimeMillis())
+        val dataDir = getExternalFilesDir(null) ?: filesDir
+        val runDir = File(dataDir, "runs/" + System.currentTimeMillis())
+        runDir.mkdirs()
+        val logFile = File(runDir, "log.txt")
+        try { logFile.writeText("任务：$task\n") } catch (_: Exception) {}
         appendLog("=== 开始任务 ===")
         running = true
+        // 亮屏锁：任务由目标 App 全屏驱动时控制面板退后台，FLAG_KEEP_SCREEN_ON 随之失效，
+        // USB 一断 stay_on_while_plugged_in 也拦不住息屏——而息屏会让截图/手势/按键三通道全灭。
+        @Suppress("DEPRECATION")
+        wakeLock = (getSystemService(POWER_SERVICE) as PowerManager)
+            .newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP, "lifeagent:run")
+            .apply { acquire(30 * 60 * 1000L) }  // 上限 30 分钟自动释放，防泄漏
         scope.launch(Dispatchers.Default) {
             try {
-                AgentLoop(service, autoConfirmBox.isChecked) { line -> runOnUiThread { appendLog(line) } }
+                AgentLoop(service, autoConfirmBox.isChecked, dataDir) { line ->
+                    runOnUiThread { appendLog(line) }
+                    try { logFile.appendText(line + "\n", Charsets.UTF_8) } catch (_: Exception) {}
+                }
                     .run(task, runDir)
                 runOnUiThread { appendLog("运行记录：$runDir") }
+                // 自学习闭环：复盘本次运行沉淀操作经验（失败不影响任务结果）
+                try {
+                    Experience.reflect(task, logFile, dataDir) { line ->
+                        runOnUiThread { appendLog(line) }
+                        // 复盘结论也落盘：外部工具靠 log.txt 判运行闭环，只写屏幕会漏判
+                        try { logFile.appendText(line + "\n", Charsets.UTF_8) } catch (_: Exception) {}
+                    }
+                } catch (e: Exception) {
+                    val msg = "[!] 经验复盘失败（不影响任务）: ${e.message}"
+                    runOnUiThread { appendLog(msg) }
+                    try { logFile.appendText(msg + "\n", Charsets.UTF_8) } catch (_: Exception) {}
+                }
             } catch (e: Exception) {
-                runOnUiThread { appendLog("[X] 任务异常: ${e.message}") }
+                val msg = "[X] 任务异常: ${e.message}"
+                runOnUiThread { appendLog(msg) }
+                // 异常必须落盘并闭环「任务结果」，否则外部工具永远等不到运行结束
+                try {
+                    logFile.appendText(
+                        "$msg\n--------------------------------------------------\n" +
+                        "[失败] 任务结果：failed\n   运行异常终止：${e.message}\n",
+                        Charsets.UTF_8
+                    )
+                } catch (_: Exception) {}
             } finally {
+                wakeLock?.let { if (it.isHeld) it.release() }
+                wakeLock = null
                 runOnUiThread { running = false }
             }
         }

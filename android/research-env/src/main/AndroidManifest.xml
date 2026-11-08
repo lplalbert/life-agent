@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 无 INTERNET 权限：测试应用完全离线，虚构业务状态，无外部网络副作用 -->
+    <application
+        android:label="研测商城"
+        android:theme="@android:style/Theme.Material.Light"
+        android:allowBackup="false">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- 控制接口：仅主机实验控制器通过 adb am broadcast 使用，
+             不作为 Agent 工具暴露；界面文字不含任何故障标签或预期答案 -->
+        <receiver
+            android:name=".ControlReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.lifeagent.researchenv.CONTROL" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>

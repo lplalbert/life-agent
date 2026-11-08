@@ -18,7 +18,8 @@ import java.io.ByteArrayOutputStream
 import java.util.concurrent.Executors
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withTimeoutOrNull
 
 /** 控件树节点：坐标为屏幕绝对包围盒。 */
 data class UINode(
@@ -74,8 +75,9 @@ class AgentService : AccessibilityService() {
 
     // ---------- 感知 ----------
 
-    /** 截取默认显示屏，返回 JPEG 字节（长边缩到 1568，控制视觉 token）。 */
-    suspend fun screenshotJpeg(maxSide: Int = 1568): ByteArray = suspendCoroutine { cont ->
+    /** 截取默认显示屏，返回 JPEG 字节（长边缩到 1568，控制视觉 token）。10s 无回调视为失败，防协程悬死。 */
+    suspend fun screenshotJpeg(maxSide: Int = 1568): ByteArray = withTimeoutOrNull(10_000) {
+        suspendCancellableCoroutine<ByteArray> { cont ->
         takeScreenshot(
             Display.DEFAULT_DISPLAY,
             Executors.newSingleThreadExecutor(),
@@ -115,11 +117,12 @@ class AgentService : AccessibilityService() {
                 }
 
                 override fun onFailure(errorCode: Int) {
-                    cont.resumeWithException(Exception("截图失败（errorCode=$errorCode，可能有系统弹窗覆盖）"))
+                    cont.resumeWithException(Exception("截图失败（errorCode=$errorCode）：屏幕可能息屏/锁屏，或显示暂不可用"))
                 }
             },
         )
-    }
+        }
+    } ?: throw Exception("截图超时（10s 无回调）")
 
     /** 抓取当前活动窗口控件树，并缓存供安全闸门查询。 */
     fun dumpUi(): List<UINode> {
@@ -147,9 +150,24 @@ class AgentService : AccessibilityService() {
         return lastNodes
     }
 
-    /** 安全闸门查询：返回包含 (x,y) 且带标签的最内层节点。 */
-    fun nodeAt(x: Int, y: Int): UINode? =
-        lastNodes.lastOrNull { it.label.isNotEmpty() && it.contains(x, y) }
+    /**
+     * 安全闸门查询：优先返回包含 (x,y) 且带标签的最内层节点；
+     * 找不到时回退到 60px 内最近的带标签节点——自绘按钮的标签常在相邻文本节点上，
+     * 闸门必须兜住视觉点按的漏检，否则敏感点击会绕过 DANGER_KEYWORDS 直接落到屏幕上。
+     */
+    fun nodeAt(x: Int, y: Int): UINode? {
+        fun dist2(n: UINode): Long {
+            val b = n.bounds
+            val dx = maxOf(b.left - x, 0, x - b.right)
+            val dy = maxOf(b.top - y, 0, y - b.bottom)
+            return (dx * dx + dy * dy).toLong()
+        }
+        lastNodes.lastOrNull { it.label.isNotEmpty() && it.contains(x, y) }?.let { return it }
+        return lastNodes
+            .filter { it.label.isNotEmpty() }
+            .minByOrNull { dist2(it) }
+            ?.takeIf { dist2(it) <= 60L * 60L }
+    }
 
     fun currentApp(): String =
         rootInActiveWindow?.packageName?.toString() ?: "unknown"
@@ -186,12 +204,17 @@ class AgentService : AccessibilityService() {
         }
         val stroke = GestureDescription.StrokeDescription(path, 0, durationMs.coerceAtLeast(1L))
         val gesture = GestureDescription.Builder().addStroke(stroke).build()
-        val ok = suspendCoroutine<Boolean> { cont ->
-            dispatchGesture(gesture, object : GestureResultCallback() {
-                override fun onCompleted(g: GestureDescription) = cont.resume(true)
-                override fun onCancelled(g: GestureDescription) = cont.resume(false)
-            }, mainHandler)
-        }
+        // dispatchGesture 返回 false 时回调不会触发；回调丢失时必须靠超时取消。
+        // 注意必须用 suspendCancellableCoroutine：不可取消的 suspendCoroutine 会让超时也永远等不到。
+        val ok = withTimeoutOrNull(5_000) {
+            suspendCancellableCoroutine<Boolean> { cont ->
+                val dispatched = dispatchGesture(gesture, object : GestureResultCallback() {
+                    override fun onCompleted(g: GestureDescription) = cont.resume(true)
+                    override fun onCancelled(g: GestureDescription) = cont.resume(false)
+                }, mainHandler)
+                if (!dispatched) cont.resume(false)
+            }
+        } ?: throw Exception("手势执行超时（5s 无回调）")
         if (!ok) throw Exception("手势被系统取消（可能有更高优先级窗口）")
     }
 

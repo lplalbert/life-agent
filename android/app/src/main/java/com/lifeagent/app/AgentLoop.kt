@@ -3,6 +3,7 @@ package com.lifeagent.app
 import android.content.Context
 import android.util.Base64
 import android.util.Log
+import kotlinx.coroutines.delay
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -13,6 +14,8 @@ val DANGER_KEYWORDS = listOf(
     "去付款", "立即付款", "确认付款", "立即购买", "立即下单", "确认交易",
     "去结算", "合并结算", "提交结算", "开通免密", "免密支付", "刷脸支付",
     "确认开通", "自动续费", "开通会员",
+    // 打车派单会真实出动司机，与支付同级设闸
+    "呼叫快车", "呼叫出租", "呼叫特惠", "叫车", "立即叫车",
 )
 
 val SYSTEM_PROMPT = """你是一名覆盖全生活服务的手机操作助手，通过截图和控件清单操控用户的安卓手机，完成外卖点餐、买菜生鲜、打车出行、订票订酒店、网购、充值缴费、电影娱乐等各类生活任务。
@@ -31,7 +34,16 @@ val SYSTEM_PROMPT = """你是一名覆盖全生活服务的手机操作助手，
 - 浏览列表用 swipe（看下方更多内容：y1 > y2，距离约 800-1500 像素）。
 - 需要输入文字时用 type_text（支持中文，直接写入输入框）。
 - 任务涉及哪个 App 就打开哪个；跨 App 的任务按需用 launch_app 切换。
+- 页面跳转或加载中用 wait 等 1-2 秒再观察，不要用滑动/点击代替等待。
 - 不做与任务无关的操作，不浏览隐私内容，不更改系统设置（处理系统弹窗除外）。
+
+## 突发情况处理（App 种类繁多且常更新，遇到没见过的情况按此应对）
+- 未知弹窗：先读标题和按钮文字，判断与任务的关系。无关弹窗找「×/关闭/跳过/以后再说/暂不」点掉；找不到就按返回键。推广/订阅/开通会员/免密升级/白条月付类弹窗是付费陷阱，一律拒绝并关闭，绝不开通。
+- 页面残留：打开 App 后若出现与任务无关的旧页面（历史订单结果、上次浏览的商品页、开屏广告），先关闭或返回到正常入口，再继续任务。
+- 预期不符：动作后页面没变化，先重新感知再重试一次；仍无效就换路径（换入口、返回上层、重新搜索、滑动查找），不要原地连点同一个位置。
+- 界面改版/布局陌生：以控件清单的语义为准，找与任务语义最接近的控件；不要依赖记忆中的固定坐标或入口名称。找不到熟悉入口时在首屏浏览找相近语义。
+- 加载缓慢/白屏/转圈：用 wait 等 2-5 秒再观察，不要用滑动或点击代替等待。
+- 每个动作后先确认效果（页面是否如预期变化）再进行下一步；同一动作失败 2 次必须换思路。
 
 ## 消费与付款（核心要求）
 - 任务要一路走到付款完成，绝不停在购物车或订单确认页（除非用户任务本身只要求到那一步）。
@@ -70,6 +82,8 @@ fun buildTools(): JSONArray = JSONArray().apply {
     put(tool("type_text", "向当前已聚焦的输入框写入文字（先用 tap 点中输入框），支持中文。",
         JSONObject().put("text", JSONObject().put("type", "string").put("description", "要输入的文本")), listOf("text")))
     put(tool("clear_text", "清空当前聚焦的输入框。", JSONObject(), listOf()))
+    put(tool("wait", "等待页面加载/跳转完成后再观察（秒，1-5）。加载中用 wait，不要用滑动代替等待。",
+        JSONObject().put("seconds", intProp()), listOf()))
     put(tool("press", "按全局按键。",
         JSONObject().put("key", JSONObject().put("type", "string")
             .put("enum", JSONArray(listOf("back", "home", "recents")))), listOf("key")))
@@ -117,19 +131,24 @@ data class RunStats(
 class AgentLoop(
     private val service: AgentService,
     private val autoConfirm: Boolean = false,
+    private val dataDir: File? = null,
     private val log: (String) -> Unit,
 ) {
-    var maxSteps = 30
+    var maxSteps = 40
     val stats = RunStats()
     private var finished: Pair<String, String>? = null
 
     suspend fun run(task: String, runDir: File): RunStats {
         finished = null
         val tools = buildTools()
+        // 注入过往任务沉淀的操作经验（自学习闭环的「用」这一半）
+        val experience = dataDir?.let { Experience.load(it) }.orEmpty()
+        val sysPrompt = if (experience.isEmpty()) SYSTEM_PROMPT else
+            SYSTEM_PROMPT + "\n\n## 你的操作经验（以往任务自动积累，优先参考；与当前屏幕冲突时以屏幕为准）\n" + experience
         val messages = JSONArray()
         val (imgBlock0, uiText0) = perceive(0, runDir)
         messages.put(JSONObject().put("role", "user").put("content", JSONArray().apply {
-            put(imgBlock0)
+            imgBlock0?.let { put(it) }
             put(JSONObject().put("type", "text").put("text", "任务：$task\n\n$uiText0"))
         }))
         var nudges = 0
@@ -137,7 +156,7 @@ class AgentLoop(
         for (step in 1..maxSteps) {
             log(">>> 第 $step 步")
             val response = try {
-                ApiClient.call(messages, SYSTEM_PROMPT, tools)
+                ApiClient.call(messages, sysPrompt, tools)
             } catch (e: Exception) {
                 log("  [X] 模型调用失败: ${e.message}")
                 finished = finished ?: ("failed" to "模型调用失败: ${e.message}")
@@ -205,11 +224,12 @@ class AgentLoop(
                 results.put(result)
             }
 
-            // 动作之后重新感知，附在最后一个 tool_result 上
+            // 动作之后稍等界面稳定再感知，附在最后一个 tool_result 上
+            delay(500)
             val (imgBlock, uiText) = perceive(step, runDir)
             val last = results.getJSONObject(results.length() - 1)
             val lastContent = last.getJSONArray("content")
-            lastContent.put(imgBlock)
+            imgBlock?.let { lastContent.put(it) }
             lastContent.put(JSONObject().put("type", "text").put("text", uiText))
             messages.put(JSONObject().put("role", "user").put("content", results))
 
@@ -239,21 +259,64 @@ class AgentLoop(
         stats.cacheCreation += u.optInt("cache_creation_input_tokens", 0)
     }
 
-    private suspend fun perceive(step: Int, runDir: File): Pair<JSONObject, String> {
-        val jpeg = service.screenshotJpeg()
-        val nodes = service.dumpUi()
+    // 感知失败不得杀死运行，且截图与控件树独立降级：截图挂掉（息屏/锁屏/弹窗）时
+    // 控件树往往还能读——让模型看得见障碍（如锁屏界面）才可能自救，而不是全盲等死。
+    private suspend fun perceive(step: Int, runDir: File): Pair<JSONObject?, String> {
         runDir.mkdirs()
-        File(runDir, "step%02d.jpg".format(step)).writeBytes(jpeg)
-        val uiText = service.compactUi(nodes)
-        File(runDir, "step%02d_ui.txt".format(step)).writeText(uiText, Charsets.UTF_8)
-        val imageBlock = JSONObject()
-            .put("type", "image")
-            .put("source", JSONObject()
-                .put("type", "base64")
-                .put("media_type", "image/jpeg")
-                .put("data", Base64.encodeToString(jpeg, Base64.NO_WRAP)))
-        val text = "[当前 ${service.currentApp()}]\n控件清单（包围盒 [l,t][r,b]，点击用中心点）：\n$uiText"
-        return imageBlock to text
+        var jpeg: ByteArray? = null
+        var imgErr: Exception? = null
+        for (attempt in 0 until 3) {
+            try {
+                jpeg = service.screenshotJpeg()
+                imgErr = null
+                break  // 成功即止：重试只用于失败恢复，不重复采集
+            } catch (e: Exception) {
+                imgErr = e
+                log("  [!] 截图失败（第 ${attempt + 1}/3 次）: ${e.message}")
+                if (attempt < 2) delay(1500)
+            }
+        }
+        var uiText: String? = null
+        var uiErr: Exception? = null
+        for (attempt in 0 until 2) {
+            try {
+                val nodes = service.dumpUi()
+                uiText = service.compactUi(nodes)
+                uiErr = null
+                break  // 成功即止
+            } catch (e: Exception) {
+                uiErr = e
+                log("  [!] 控件树失败（第 ${attempt + 1}/2 次）: ${e.message}")
+                if (attempt < 1) delay(800)
+            }
+        }
+
+        jpeg?.let {
+            try { File(runDir, "step%02d.jpg".format(step)).writeBytes(it) } catch (_: Exception) {}
+        }
+        uiText?.let {
+            try { File(runDir, "step%02d_ui.txt".format(step)).writeText(it, Charsets.UTF_8) } catch (_: Exception) {}
+        }
+
+        val imageBlock = jpeg?.let {
+            JSONObject()
+                .put("type", "image")
+                .put("source", JSONObject()
+                    .put("type", "base64")
+                    .put("media_type", "image/jpeg")
+                    .put("data", Base64.encodeToString(it, Base64.NO_WRAP)))
+        }
+        val body = when {
+            uiText != null ->
+                "控件清单（包围盒 [l,t][r,b]，点击用中心点）：\n$uiText" +
+                    if (jpeg == null) "\n[截图暂不可用：${imgErr?.message}。若屏幕息屏或处于锁屏，先用 swipe 上滑解锁（如 swipe 360,2200 到 360,800），恢复后再继续，不要终止任务。]" else ""
+            jpeg != null ->
+                "[控件树暂不可用：${uiErr?.message}。以截图为准继续操作，必要时 wait 等界面稳定。]"
+            else ->
+                "[感知失败：截图（${imgErr?.message}）与控件树（${uiErr?.message}）均不可用。]" +
+                    "大概率是屏幕息屏/锁屏或应用刚切换：用 swipe 上滑解锁或 wait 2-5 秒后重试，不要因此终止任务。"
+        }
+        return imageBlock to "[当前 ${service.currentApp()}]\n$body"
     }
 
     private suspend fun execute(name: String, args: JSONObject): Pair<String, Boolean> = try {
@@ -295,8 +358,14 @@ class AgentLoop(
             "已清空输入框"
         }
         "press" -> service.press(args.getString("key"))
+        "wait" -> {
+            val s = args.optInt("seconds", 2).coerceIn(1, 5)
+            delay(s * 1000L)
+            "已等待 $s 秒"
+        }
         "launch_app" -> {
             service.launchApp(args.getString("package"))
+            delay(1500)  // 冷启动需要时间，避免下一次截图抓到旧画面
             "已启动 ${args.getString("package")}"
         }
         "ask_human" -> {
@@ -317,7 +386,15 @@ class AgentLoop(
                 if (!ok) {
                     "用户拒绝了该操作。请停止或换方案。"
                 } else {
-                    service.tap(x, y)
+                    // 点「确认」后弹窗 finish() 是异步的：手势立刻打过去会被正在消失的
+                    // 弹窗窗口挡掉（手势被系统取消）。等窗口消失再点，失败重试一次。
+                    delay(600)
+                    try {
+                        service.tap(x, y)
+                    } catch (e: Exception) {
+                        delay(800)
+                        service.tap(x, y)
+                    }
                     "用户已确认，已点击「$btn」。请继续执行直到付款完成。"
                 }
             }

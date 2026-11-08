@@ -31,7 +31,7 @@ object ApiClient {
                     .put("text", system)
                     .put("cache_control", JSONObject().put("type", "ephemeral"))
             ))
-            put("tools", tools)
+            if (tools.length() > 0) put("tools", tools)
             put("messages", messages)
         }
 
