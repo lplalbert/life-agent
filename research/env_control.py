@@ -22,8 +22,29 @@ def adb(serial, *args, check=True):
     return r.stdout
 
 
+def _wait_state_episode(serial, episode, timeout=10.0):
+    """等复位「完成」：接收器处理完并回写 state.json（episode_id 对上）。"""
+    deadline = time.time() + timeout
+    st = {}
+    while time.time() < deadline:
+        try:
+            st = read_state(serial)
+        except Exception:  # noqa: BLE001 — 快照读失败按未就绪重试
+            st = {}
+        if st.get("episode_id") == episode:
+            return st
+        time.sleep(0.2)
+    raise RuntimeError(
+        f"复位未生效：state.json episode_id={st.get('episode_id')!r} ≠ {episode!r}")
+
+
 def broadcast_reset(serial=DEFAULT_SERIAL, **cfg):
-    """平铺 extras 发复位广播；expected_ids 传 list，内部转逗号分隔。"""
+    """平铺 extras 发复位广播；expected_ids 传 list，内部转逗号分隔。
+
+    复位「完成」= 接收器处理完并回写 state.json（episode_id 对上）后才返回——
+    调用方拿到的是已复位环境，首屏线索不再被感知竞态错过（2026-11-09 t1r4s2g1
+    首屏抓到桌面、横幅从未入帧的事故后加的对账）。未给 episode 时退回固定等待。
+    """
     args = ["shell", "am", "broadcast", "-a", f"{PKG}.CONTROL",
             "-n", f"{PKG}/.ControlReceiver", "--es", "cmd", "reset"]
     for k, v in cfg.items():
@@ -37,7 +58,11 @@ def broadcast_reset(serial=DEFAULT_SERIAL, **cfg):
             continue
         args += ["--es", k, str(v)]
     adb(serial, *args)
-    time.sleep(0.6)
+    episode = cfg.get("episode")
+    if episode:
+        _wait_state_episode(serial, episode)
+    else:
+        time.sleep(0.6)
 
 
 def read_state(serial=DEFAULT_SERIAL):
@@ -58,5 +83,17 @@ def read_events(serial=DEFAULT_SERIAL):
 
 
 def open_app(serial=DEFAULT_SERIAL):
+    """拉起 app 并等「可观测」：前台焦点确认 + 渲染安定后才返回。
+
+    固定 sleep 在冷启动（进程被杀后首跑）不够——2026-11-09 t1r4s2g1 首屏
+    截到桌面即此因。焦点轮询到手再短安定，首帧即 app 首屏。
+    """
     adb(serial, "shell", "am", "start", "-n", f"{PKG}/.MainActivity")
-    time.sleep(1.2)
+    deadline = time.time() + 10.0
+    while time.time() < deadline:
+        out = adb(serial, "shell", "dumpsys window | grep mCurrentFocus", check=False)
+        if PKG in out:
+            time.sleep(0.5)
+            return
+        time.sleep(0.3)
+    raise RuntimeError(f"app 未取得前台焦点：{PKG}")
