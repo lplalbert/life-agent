@@ -67,7 +67,8 @@ def _sha256(text: str) -> str:
 def run_episode(cfg: dict, *, serial: str, model: str, policy: str, max_images: int,
                 experience_text: str, out_root: Path, max_steps: int,
                 dry_reset: bool, retrieval: bool = False,
-                summarize_every: int = 0, retrieval_nudge: bool = False) -> dict:
+                summarize_every: int = 0, retrieval_nudge: bool = False,
+                provenance_gate: bool = False) -> dict:
     episode_id = cfg["episode_id"]
     ep_dir = Path(out_root) / episode_id
     ep_dir.mkdir(parents=True, exist_ok=True)
@@ -124,13 +125,14 @@ def run_episode(cfg: dict, *, serial: str, model: str, policy: str, max_images: 
         retrieval=retrieval,
         summarize_every=summarize_every,
         retrieval_nudge=retrieval_nudge,
+        provenance_gate=provenance_gate,
     )
     agent = Agent(
         phone, client, model=model, run_dir=ep_dir, max_steps=max_steps,
         context_policy=policy, max_images=max_images,
         frozen_experience=experience_text, run_logger=run_logger,
         retrieval=retrieval, summarize_every=summarize_every,
-        retrieval_nudge=retrieval_nudge,
+        retrieval_nudge=retrieval_nudge, provenance_gate=provenance_gate,
     )
     t0 = time.time()
     usage = agent.run(task)
@@ -157,7 +159,7 @@ def run_episode(cfg: dict, *, serial: str, model: str, policy: str, max_images: 
         "elapsed_s": round(elapsed, 2), "max_steps": max_steps,
         "model": model, "context_policy": policy, "max_images": max_images,
         "retrieval": retrieval, "summarize_every": summarize_every,
-        "retrieval_nudge": retrieval_nudge,
+        "retrieval_nudge": retrieval_nudge, "provenance_gate": provenance_gate,
     }
     (ep_dir / "episode.json").write_text(
         json.dumps(record, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -188,6 +190,8 @@ def main(argv: list | None = None) -> int:
                         help="注入历史取回工具 review_screenshot（方法组件）")
     parser.add_argument("--retrieval-nudge", action="store_true",
                         help="system 追加取回触发提示（需 --retrieval）")
+    parser.add_argument("--provenance-gate", action="store_true",
+                        help="证据闸门：type_text 无出处值拦下取证（需 --retrieval）")
     parser.add_argument("--summarize-every", type=int, default=0,
                         help="摘要蒸馏基线：每 M 回合一次额外模型调用（0=关）")
     parser.add_argument("--experience", type=Path, help="冻结经验文件（研究期间不变）")
@@ -227,6 +231,7 @@ def main(argv: list | None = None) -> int:
         out_root=args.out, max_steps=args.max_steps, dry_reset=args.dry_reset,
         retrieval=args.retrieval, summarize_every=args.summarize_every,
         retrieval_nudge=args.retrieval_nudge,
+        provenance_gate=args.provenance_gate,
     )
     print(json.dumps({k: record[k] for k in record if k != "reset_probe"},
                      ensure_ascii=False, indent=2))

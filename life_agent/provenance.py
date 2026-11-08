@@ -114,9 +114,9 @@ def format_gate_response(finding: ProvenanceFinding, max_steps: int = 5) -> str:
     指路取证；agent 回看后重新提交同一值即视为显式确认（钩子侧记录 override），
     闸门本身永远不读 ground truth、不判定对错。候选步只列前 max_steps 条控长度。
     """
-    lines = [f"[证据闸门] 待提交的「{finding.value}」在当前可见证据文本中没有出处"
-             f"（控件树/摘要/提示均未出现）。请用 review_screenshot 回看候选步核实后"
-             f"重新提交；确信无误可再次提交同一值以确认。"]
+    lines = [f"[证据闸门] 待提交的「{finding.value}」在本次请求的证据文本中没有出处"
+             f"（控件树、摘要与对话文本均未出现）。请用 review_screenshot 回看候选步"
+             f"核实后重新提交；确信无误可再次提交同一值以确认。"]
     for step, reason in zip(finding.review_candidates[:max_steps],
                             finding.reasons[:max_steps]):
         lines.append(f"- 第 {step} 步：{REASON_ZH.get(reason, reason)}")

@@ -18,7 +18,8 @@ if str(ROOT) not in sys.path:
 
 from PIL import Image
 
-from life_agent.agent import RETRIEVAL_NUDGE, SUMMARY_MAX_TOKENS, Agent, _summary_max_tokens
+from life_agent.agent import (RETRIEVAL_NUDGE, SUMMARY_MAX_TOKENS, Agent,
+                              GateRefusal, _summary_max_tokens)
 from life_agent.phone import PhoneError, UINode
 from life_agent.runlog import RunLogger, validate_request
 from research.context_policy import select
@@ -46,6 +47,7 @@ class FakePhone:
         self.screenshot_calls = 0
         self.dump_calls = 0
         self.taps = []
+        self.typed = []
 
     @staticmethod
     def _take(script, used):
@@ -82,6 +84,7 @@ class FakePhone:
         pass
 
     def type_text(self, text):
+        self.typed.append(text)
         return "fake"
 
     def clear_text(self):
@@ -147,7 +150,8 @@ def response(content, stop_reason="tool_use"):
 
 
 def run_agent(shots, uis, turns, policy="full", max_images=2, pkg=None, experience="",
-              retrieval=False, summarize_every=0, retrieval_nudge=False):
+              retrieval=False, summarize_every=0, retrieval_nudge=False,
+              provenance_gate=False):
     phone = FakePhone(shots, uis, pkg) if pkg else FakePhone(shots, uis)
     # 队列项可以是块元组（自动包响应）或预构建响应（自定义 stop_reason 等）
     client = FakeClient([t if hasattr(t, "content") else response(t) for t in turns])
@@ -158,7 +162,8 @@ def run_agent(shots, uis, turns, policy="full", max_images=2, pkg=None, experien
                   context_policy=policy, max_images=max_images,
                   frozen_experience=experience, run_logger=run_log,
                   retrieval=retrieval, summarize_every=summarize_every,
-                  retrieval_nudge=retrieval_nudge)
+                  retrieval_nudge=retrieval_nudge,
+                  provenance_gate=provenance_gate)
     with mock.patch("life_agent.agent.time.sleep"):
         agent.run("测试任务")
     return agent, phone, client, tmp
@@ -460,6 +465,103 @@ class RetrievalToolBoundary(unittest.TestCase):
         _, _, client, _ = run_agent(shots, uis, turns, policy="full", retrieval=True)
         # 第 2 次请求：step0 只发一份（钉住槽优先，原始槽让位）+ step1 = 2 张
         self.assertEqual(ContextPolicyIntegration._image_counts(client), [1, 2])
+
+
+class ProvenanceGateBoundary(unittest.TestCase):
+    """证据闸门（改进组件）：type_text 无出处值首次拦下取证，重提=显式确认。
+
+    判定只用请求内文本与帧状态，不读 ground truth；提交值不能拿当前响应
+    里自己的 tool_use 回显自证出处，但对话/思考文本的自发抄录算出处。
+    """
+
+    @staticmethod
+    def _agent(**kw):
+        phone = FakePhone([make_png()], [[node("输入框")]])
+        return Agent(phone, FakeClient([]), model="fake",
+                     retrieval=True, provenance_gate=True, **kw)
+
+    def test_off_by_default_and_requires_retrieval(self):
+        phone = FakePhone([make_png()], [[node("输入框")]])
+        agent = Agent(phone, FakeClient([]), model="fake")
+        out = agent._dispatch("type_text", {"text": "W3JG"})
+        self.assertIn("已通过", out)
+        self.assertEqual(phone.typed, ["W3JG"])
+        with self.assertRaises(ValueError):
+            Agent(phone, FakeClient([]), model="fake", provenance_gate=True)
+
+    def test_unsubstantiated_value_blocked_then_override(self):
+        agent = self._agent()
+        agent._messages = [{"role": "user", "content": [
+            {"type": "text", "text": "任务：购买商品\n控件清单：输入框"}]}]
+        agent._image_blocks = {0: {"type": "image"}}
+        agent._last_sent_steps = []                       # 横幅帧已逐出
+        with self.assertRaises(GateRefusal) as ctx:
+            agent._dispatch("type_text", {"text": "W3JG"})
+        self.assertIn("[证据闸门]", str(ctx.exception))
+        self.assertIn("第 0 步", str(ctx.exception))
+        self.assertEqual(agent.phone.typed, [])          # 未执行写入
+        out = agent._dispatch("type_text", {"text": "W3JG"})  # 重提=显式确认
+        self.assertIn("已通过", out)
+        self.assertEqual(agent.phone.typed, ["W3JG"])
+
+    def test_substantiated_value_passes(self):
+        agent = self._agent()
+        agent._messages = [{"role": "user", "content": [
+            {"type": "text", "text": "任务：输入信息\n控件清单：横幅 内容：会员日 W3JG"}]}]
+        out = agent._dispatch("type_text", {"text": "w3jg"})   # ASCII 大小写不敏感
+        self.assertIn("已通过", out)
+
+    def test_short_value_never_blocked(self):
+        agent = self._agent()
+        agent._messages = []
+        out = agent._dispatch("type_text", {"text": "3"})
+        self.assertIn("已通过", out)
+
+    def test_own_tool_use_arg_never_self_substantiates(self):
+        agent = self._agent()
+        agent._messages = [
+            {"role": "user", "content": [{"type": "text", "text": "任务：购买"}]},
+            {"role": "assistant", "content": [
+                tool_use("t1", "type_text", {"text": "WXYZ"})]},
+        ]
+        with self.assertRaises(GateRefusal):
+            agent._dispatch("type_text", {"text": "WXYZ"})
+        self.assertEqual(agent.phone.typed, [])
+
+    def test_spontaneous_transcription_substantiates(self):
+        # 自发抄录通路：值先出现在思考/对话文本（历史或同响应）→ 有出处不拦
+        for pos in ("history", "same_response"):
+            agent = self._agent()
+            recital = thinking_block("横幅码是 W3JG")
+            cur = tool_use("t1", "type_text", {"text": "W3JG"})
+            if pos == "history":
+                agent._messages = [
+                    {"role": "user", "content": [{"type": "text", "text": "任务"}]},
+                    {"role": "assistant", "content": [recital]},
+                    {"role": "assistant", "content": [cur]},
+                ]
+            else:
+                agent._messages = [
+                    {"role": "user", "content": [{"type": "text", "text": "任务"}]},
+                    {"role": "assistant", "content": [recital, cur]},
+                ]
+            out = agent._dispatch("type_text", {"text": "W3JG"})
+            self.assertIn("已通过", out, pos)
+            self.assertEqual(agent.phone.typed, ["W3JG"], pos)
+
+    def test_run_jsonl_gate_records(self):
+        shots = [make_png(), make_png()]
+        uis = [[node("输入框")], [node("输入框")]]
+        turns = (
+            (tool_use("t1", "type_text", {"text": "WXYZ"}),),
+            (tool_use("t2", "type_text", {"text": "WXYZ"}),),
+            (tool_use("t3", "finish", {"status": "done", "summary": "x"}),),
+        )
+        _, _, _, tmp = run_agent(shots, uis, turns, retrieval=True,
+                                 provenance_gate=True)
+        gates = [l for l in read_run(tmp) if l.get("type") == "gate"]
+        self.assertEqual([(g["action"], g["trigger"]) for g in gates],
+                         [("blocked", True), ("override", False)])
 
 
 class RetrievalTriggerNudge(unittest.TestCase):

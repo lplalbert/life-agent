@@ -119,6 +119,12 @@ POLICY_VARIANTS = {
     # （max_tokens 随候选帧数放宽 ≥400/帧，≤3 帧仍 1200）。批次 5 的 recent1sum6
     # 失利含「固定 1200 上限 × 6 帧批量」截断伪影，此臂分离「频率不足」与「截断」两解。
     "recent1sum6b": ("recent", 1, {"summarize_every": 6}),
+    # Provenance Gate（PG）臂：type_text 出处检查（默认关，标签区分 A/B）。
+    # recent1retrpg 对照 recent1retrnudge（软提示 10/12）：硬触发 vs 弱话术；
+    # ev2sum3retrpg = 全方法 M + PG（价值域「蒸馏+Gate」臂）。
+    "recent1retrpg": ("recent", 1, {"retrieval": True, "provenance_gate": True}),
+    "ev2sum3retrpg": ("evidence", 2, {"summarize_every": 3, "retrieval": True,
+                                      "provenance_gate": True}),
 }
 
 POLICIES = ("full", "recent", "evidence")

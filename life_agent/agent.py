@@ -17,6 +17,8 @@ from dataclasses import dataclass
 from PIL import Image
 
 from .phone import Phone, PhoneError, UINode, compact_ui
+from .provenance import (StepEvidence, TextBlock, check_value,
+                         format_gate_response)
 from .runlog import RunLogger, validate_request
 from research.context_policy import select as select_images
 
@@ -245,6 +247,64 @@ class Usage:
         ) / 1_000_000
 
 
+class GateRefusal(Exception):
+    """证据闸门拦截：提交值无文本出处，指路取证后再提交（非设备/参数错误）。"""
+
+
+def _request_text_blocks(messages: list) -> list[TextBlock]:
+    """收集请求内全部文本块（控件树/任务/摘要/工具结果/对话/思考），按角色标注。
+
+    dict 块与 SDK 块两种形态都收（assistant 历史存的是 SDK 对象）；只取字面文本，
+    不做归一化——出处判定在 provenance.find_substantiation。图像槽无文本，跳过。
+    """
+    out: list[TextBlock] = []
+
+    def walk(block, kind: str) -> None:
+        if block is None:
+            return
+        if isinstance(block, str):
+            if block:
+                out.append(TextBlock(kind, block))
+            return
+        if isinstance(block, (list, tuple)):
+            for b in block:
+                walk(b, kind)
+            return
+        if not isinstance(block, dict):
+            btype = getattr(block, "type", "")
+            if btype == "text":
+                walk(getattr(block, "text", ""), kind)
+            elif btype == "thinking":
+                walk(getattr(block, "thinking", ""), kind)
+            elif btype == "tool_use":
+                walk(getattr(block, "input", None), "note")
+            elif btype == "tool_result":
+                walk(getattr(block, "content", None), "feedback")
+            return
+        btype = block.get("type")
+        if btype == "text":
+            walk(block.get("text"), kind)
+        elif btype == "thinking":
+            walk(block.get("thinking"), kind)
+        elif btype == "tool_use":
+            walk(block.get("input"), "note")
+        elif btype == "tool_result":
+            walk(block.get("content"), "feedback")
+        elif btype == "_image_slot":
+            return
+        else:  # 普通 dict（tool_use 参数值等）或未识别块：取全部字面值
+            for v in block.values():
+                walk(v, kind)
+
+    for msg in messages or []:
+        if isinstance(msg, dict):
+            role, content = msg.get("role", ""), msg.get("content")
+        else:
+            role, content = getattr(msg, "role", ""), getattr(msg, "content", None)
+        walk(content, "ui" if role == "user" else "note")
+    return out
+
+
 class Agent:
     def __init__(
         self,
@@ -260,9 +320,12 @@ class Agent:
         retrieval: bool = False,
         summarize_every: int = 0,
         retrieval_nudge: bool = False,
+        provenance_gate: bool = False,
     ):
         if retrieval_nudge and not retrieval:
             raise ValueError("retrieval_nudge 需要 retrieval=True（无取回工具时提示无对象）")
+        if provenance_gate and not retrieval:
+            raise ValueError("provenance_gate 需要 retrieval=True（取证指路需回看工具）")
         self.phone = phone
         self.client = client
         self.model = model
@@ -275,6 +338,7 @@ class Agent:
         self.retrieval = retrieval
         self.summarize_every = summarize_every
         self.retrieval_nudge = retrieval_nudge
+        self.provenance_gate = provenance_gate
         self.usage = Usage()
         self._tools = list(TOOLS) + ([REVIEW_TOOL] if retrieval else [])
         self._nodes: list[UINode] = []
@@ -291,6 +355,7 @@ class Agent:
         self._last_sent_steps: list[int] = []  # 上一请求实际发出的图像步（含钉住帧）
         self._last_actions_expect: list[str] = []  # 本回合动作的期望效果
         self._last_gate: dict = {}  # 最近一次 tap/confirm_and_tap 的闸门判定
+        self._gate_seen: set[str] = set()  # 证据闸门已触发过的提交值（重提=显式确认）
 
     # ---------- 感知 ----------
 
@@ -415,12 +480,65 @@ class Agent:
                 return node
         return None
 
+    # ---------- 证据闸门（与安全闸门对偶：提交值须有请求内文本出处） ----------
+
+    def _provenance_gate(self, text: str) -> str | None:
+        """provenance_gate=True 时检查 type_text 提交值；返回拦截文本或 None。
+
+        出处 = 请求内全部文本（控件树/摘要/任务/对话与思考——自发抄录通路）；
+        唯一例外是当前响应的 tool_use 参数：提交值不能拿自己的回显自证。
+        帧状态（本次请求保留/逐出/已蒸馏）决定候选步排序。全程不读 ground truth。
+        首次无出处提交被拦下并浮出可回看候选步；重提同一值 = 显式确认放行
+        （记 override），与 confirm_and_tap 的二次确认对偶。
+        """
+        if not self.provenance_gate:
+            return None
+        value = (text or "").strip()
+        if value in self._gate_seen:
+            self._log_gate(value, trigger=False, action="override")
+            return None
+        msgs = self._messages
+        if msgs and isinstance(msgs[-1], dict) and msgs[-1].get("role") == "assistant":
+            cur = msgs[-1]
+            trimmed = [
+                None if (isinstance(b, dict) and b.get("type") == "tool_use")
+                or (not isinstance(b, dict) and getattr(b, "type", "") == "tool_use")
+                else b
+                for b in (cur.get("content") or [])
+            ]
+            msgs = msgs[:-1] + [{**cur, "content": trimmed}]
+        blocks = _request_text_blocks(msgs)
+        steps = [
+            StepEvidence(step=s, has_image=True,
+                         retained=s in set(self._last_sent_steps),
+                         distilled=s in self._summary_seen)
+            for s in sorted(self._image_blocks)
+        ]
+        finding = check_value(value, blocks, steps)
+        if not finding.trigger:
+            self._log_gate(value, trigger=False, action="pass")
+            return None
+        self._gate_seen.add(value)
+        self._log_gate(value, trigger=True, action="blocked",
+                       candidates=list(finding.review_candidates),
+                       reasons=list(finding.reasons))
+        return format_gate_response(finding)
+
+    def _log_gate(self, value: str, *, trigger: bool, action: str,
+                  candidates: list | None = None, reasons: list | None = None) -> None:
+        if self.run_log:
+            self.run_log.log_gate(step=self._step, value=value, trigger=trigger,
+                                  action=action, candidates=candidates,
+                                  reasons=reasons)
+
     # ---------- 工具执行 ----------
 
     def _execute(self, name: str, args: dict) -> tuple[str, bool]:
         """执行工具，返回 (结果文本, 是否错误)。"""
         try:
             return self._dispatch(name, args), False
+        except GateRefusal as exc:
+            return str(exc), True
         except PhoneError as exc:
             return f"操作失败: {exc}", True
         except (KeyError, TypeError, ValueError) as exc:
@@ -462,6 +580,9 @@ class Agent:
 
         if name == "type_text":
             text = str(args["text"])
+            refusal = self._provenance_gate(text)
+            if refusal is not None:
+                raise GateRefusal(refusal)
             way = self.phone.type_text(text)
             return f"已通过 {way} 输入：{text}"
 

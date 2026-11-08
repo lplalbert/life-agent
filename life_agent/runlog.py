@@ -208,6 +208,21 @@ class RunLogger:
         self.events.append(event)
         self._write(event)
 
+    def log_gate(self, step: int, value: str, trigger: bool, action: str,
+                 candidates: list | None = None, reasons: list | None = None) -> None:
+        """证据闸门（Provenance Gate）判定记录：value 为 agent 自己的提交值。
+
+        action: "blocked"（首次无出处，拦下取证）| "override"（重提放行）|
+        "pass"（有出处/过短，不触发）。不进 causal_events（非上下文投影事件）。
+        """
+        if action not in ("blocked", "override", "pass"):
+            raise ValueError(f"invalid gate action: {action}")
+        self._write({
+            "type": "gate", "step": step, "value": value, "trigger": trigger,
+            "action": action, "candidates": candidates or [],
+            "reasons": reasons or [],
+        })
+
     # ---- 供 context_policy 使用的投影 ----
 
     def causal_events(self) -> list[dict]:
