@@ -68,7 +68,8 @@ def run_episode(cfg: dict, *, serial: str, model: str, policy: str, max_images: 
                 experience_text: str, out_root: Path, max_steps: int,
                 dry_reset: bool, retrieval: bool = False,
                 summarize_every: int = 0, retrieval_nudge: bool = False,
-                provenance_gate: bool = False) -> dict:
+                provenance_gate: bool = False,
+                task_builder=None, verdict_fn=None) -> dict:
     episode_id = cfg["episode_id"]
     ep_dir = Path(out_root) / episode_id
     ep_dir.mkdir(parents=True, exist_ok=True)
@@ -85,7 +86,9 @@ def run_episode(cfg: dict, *, serial: str, model: str, policy: str, max_images: 
             json.dumps(record, ensure_ascii=False, indent=2), encoding="utf-8")
         return record
 
-    task = build_task(state0.get("items", []), cfg["reset"].get("expected_ids") or [])
+    # 任务构造/判分可换钩子（长任务族用 longtask_manifest/verdict）；默认=单订单口径
+    task = (task_builder(state0.get("items", [])) if task_builder
+            else build_task(state0.get("items", []), cfg["reset"].get("expected_ids") or []))
     (ep_dir / "task.txt").write_text(task, encoding="utf-8")
 
     if dry_reset:
@@ -148,7 +151,8 @@ def run_episode(cfg: dict, *, serial: str, model: str, policy: str, max_images: 
             f.write(json.dumps(e, ensure_ascii=False) + "\n")
 
     # ---- 4. 评分与记录 ----
-    verdict = compute_verdict(state1, cfg["reset"]["fault"])
+    verdict = (verdict_fn(state1) if verdict_fn
+               else compute_verdict(state1, cfg["reset"]["fault"]))
     record = {
         "episode_id": episode_id, "status": "completed", "config": cfg,
         "task": task, "verdict": verdict,
