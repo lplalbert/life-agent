@@ -101,5 +101,19 @@ API 凭证写在 `android/local.properties`（不入 git，编译时注入 APK�
 life_agent/
   phone.py   ADB 控制层：截图、控件树解析、点击/滑动/输入、启动 App
   agent.py   Agent 循环：感知 → Claude 工具调用 → 安全闸门 → 执行
+  runlog.py  运行记录：run.jsonl 逐步留证 + token 用量四类分列
   cli.py     命令行入口（单任务 / 交互 / --dry-run）
 ```
+
+## 仓库结构（研究平台）
+
+- `android/research-env/` 研测商城：合成购物环境（五类机制故障、promo 瞬时线索、
+  多轮订单账本、状态导出），主机经广播复位并收取 ground truth；
+  界面文字不含任何故障标签、预期答案或路径提示。
+- `research/` 实验平台：episode 矩阵运行器（pilot_runner/episode_runner）、
+  上下文策略（full/recent/evidence/keyframe 及消融变体）、摘要蒸馏与历史取回、
+  证据出处账本（provenance.py）、离线归因分析（flash_analysis）。
+  测试：`python -m unittest discover -s research/tests`。
+- `docs/` 研究计划与协议；执行记录见 `research/EXECUTION-*.md`。
+- 本地不入库：`runs/`（截图与原始日志）、`research/results/`（生成产物）、
+  `toolchain/`、`.venv/`、`android/local.properties`（真实凭证，勿外传）。
