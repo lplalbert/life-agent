@@ -8,7 +8,8 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from life_agent.provenance import (MIN_VALUE_CHARS, ProvenanceFinding, StepEvidence,
+from life_agent.provenance import (MIN_VALUE_CHARS, SUBSTANTIATION_KINDS,
+                                   ProvenanceFinding, StepEvidence,
                                    TextBlock, check_value, find_substantiation,
                                    format_gate_response, rank_review_candidates)
 from dataclasses import FrozenInstanceError
@@ -22,6 +23,18 @@ def summary(text):
     return TextBlock("summary", text, None)
 
 
+def task(text):
+    return TextBlock("task", text, None)
+
+
+def note(text):
+    return TextBlock("note", text, None)
+
+
+def feedback(text):
+    return TextBlock("feedback", text, None)
+
+
 class Substantiation(unittest.TestCase):
     def test_value_in_summary_text_is_substantiated(self):
         blocks = [summary("第0步横幅：会员日优惠码 CS3J")]
@@ -29,7 +42,8 @@ class Substantiation(unittest.TestCase):
         self.assertEqual(len(m), 1)
         self.assertEqual(m[0].kind, "summary")
 
-    def test_value_in_old_ui_text_is_substantiated(self):
+    def test_find_substantiation_is_channel_agnostic(self):
+        # 通用匹配器对 ui 文本也字面命中——渠道过滤只在 check_value 做
         blocks = [ui(3, "券码 W3JG 已填入输入框")]
         self.assertEqual(len(find_substantiation("W3JG", blocks)), 1)
 
@@ -106,6 +120,93 @@ class GateDecision(unittest.TestCase):
             f.trigger = False
 
 
+class ChannelPolicy(unittest.TestCase):
+    """渠道化出处：控件树文本（ui）不算提交值出处，四个记忆渠道各算。
+
+    动机=实测失败通路「把输入框提示当答案」：占位提示「会员日优惠码」住在
+    控件树文本里，字面子串规则会误判「有出处」放行（pg-preflight-1 gate miss）。
+    """
+
+    def test_ui_text_alone_does_not_substantiate(self):
+        f = check_value("会员日优惠码",
+                        [task("购买商品"), ui(8, "EditText hint=会员日优惠码")], [])
+        self.assertTrue(f.trigger)
+        self.assertEqual(f.matches, ())
+
+    def test_ui_text_does_not_hide_true_substantiation(self):
+        # ui 命中被剔除后，summary 渠道的出处仍正常放行
+        f = check_value("W3JG", [ui(1, "提示 W3JG"), summary("横幅码 W3JG")], [])
+        self.assertFalse(f.trigger)
+        self.assertEqual([m.kind for m in f.matches], ["summary"])
+
+    def test_each_memory_channel_substantiates(self):
+        for block in (task("目标码 W3JG"), summary("横幅 W3JG"),
+                      note("我抄录：W3JG"), feedback("人类回答：W3JG")):
+            f = check_value("W3JG", [ui(0, "无关"), block], [])
+            self.assertFalse(f.trigger, block.kind)
+            self.assertEqual(f.reasons, ("substantiated_in_text",))
+
+    def test_substantiation_kinds_exclude_ui(self):
+        self.assertEqual(set(SUBSTANTIATION_KINDS),
+                         {"task", "summary", "note", "feedback"})
+        self.assertNotIn("ui", SUBSTANTIATION_KINDS)
+
+
+class PlaceholderRule(unittest.TestCase):
+    """占位提示规则（字段语义）：V 等于输入框占位提示/标签 = 问题文案当答案。
+
+    无视一切转录出处（思考/摘要/工具回显都可能「洗白」屏幕文案）直接触发；
+    转录命中记入 matches 供归因。pg-preflight-2 实测驱动。
+    """
+
+    HINT = "会员日优惠码"
+
+    def _finding(self, blocks, questions=None):
+        return check_value(self.HINT, blocks, [],
+                           question_texts=questions or (self.HINT,))
+
+    def test_placeholder_triggers_despite_summary_laundering(self):
+        f = self._finding([task("购买商品"), summary(f"输入框提示：{self.HINT}")])
+        self.assertTrue(f.trigger)
+        self.assertEqual(f.trigger_reason, "field_placeholder")
+        self.assertEqual([m.kind for m in f.matches], ["summary"])  # 归因：转录渠道
+
+    def test_placeholder_triggers_despite_note_and_feedback(self):
+        f = self._finding([note(f"提示是{self.HINT}，试试输入"),
+                          feedback(f"已点击 「{self.HINT}」")])
+        self.assertTrue(f.trigger)
+        self.assertEqual(sorted(m.kind for m in f.matches), ["feedback", "note"])
+
+    def test_placeholder_triggers_even_without_any_recital(self):
+        f = self._finding([task("购买商品")])
+        self.assertTrue(f.trigger)
+        self.assertEqual(f.trigger_reason, "field_placeholder")
+
+    def test_question_match_is_stripped_and_case_insensitive(self):
+        f = check_value("W3jg ", [summary("无关")], [],
+                        question_texts=("  w3JG ",))
+        self.assertTrue(f.trigger)
+        self.assertEqual(f.trigger_reason, "field_placeholder")
+
+    def test_placeholder_fragment_also_triggers(self):
+        # pg-preflight-3：模型打的是占位提示片段「会员日」——问题文案的片段同样
+        # 不是答案（note 转录 ×6 曾放行）
+        f = check_value("会员日", [note("横幅标题是会员日")], [],
+                        question_texts=("会员日优惠码",))
+        self.assertTrue(f.trigger)
+        self.assertEqual(f.trigger_reason, "field_placeholder")
+
+    def test_non_placeholder_value_unaffected(self):
+        f = check_value("W3JG", [summary("横幅码 W3JG")], [],
+                        question_texts=(self.HINT,))
+        self.assertFalse(f.trigger)
+
+    def test_no_provenance_reason_kept_for_other_triggers(self):
+        f = check_value("WXYZ", [task("无关")], [])
+        self.assertTrue(f.trigger)
+        self.assertEqual(f.trigger_reason, "no_provenance")
+
+
 class GateResponseText(unittest.TestCase):
     def test_names_value_and_review_path_without_answers(self):
         f = check_value("W3JG", [ui(0, "商品列表")],
@@ -131,6 +232,15 @@ class GateResponseText(unittest.TestCase):
         msg = format_gate_response(f)
         for leak in ("promo", "优惠码", "expected", "fault"):
             self.assertNotIn(leak, msg)
+
+    def test_placeholder_variant_names_question_not_answer(self):
+        f = check_value("会员日优惠码", [], [StepEvidence(0, True, retained=False)],
+                        question_texts=("会员日优惠码",))
+        msg = format_gate_response(f)
+        self.assertIn("占位提示", msg)               # 贴因：问题文案不是答案
+        self.assertIn("会员日优惠码", msg)            # 提交值原样回显
+        self.assertIn("review_screenshot", msg)
+        self.assertIn("第 0 步", msg)
 
 
 if __name__ == "__main__":

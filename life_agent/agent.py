@@ -251,11 +251,29 @@ class GateRefusal(Exception):
     """证据闸门拦截：提交值无文本出处，指路取证后再提交（非设备/参数错误）。"""
 
 
+# 消息内文本块的渠道前缀（构造与出处归类共用，防两处漂移）：
+# 任务 / 观察（控件树）/ 视觉记忆摘要。渠道语义见 provenance.SUBSTANTIATION_KINDS。
+_TASK_PREFIX = "任务："
+_OBS_PREFIX = "[当前 "
+_SUMMARY_PREFIX = "[视觉记忆摘要"
+
+
+def _text_kind(text: str, default: str) -> str:
+    if text.startswith(_OBS_PREFIX):
+        return "ui"
+    if text.startswith(_SUMMARY_PREFIX):
+        return "summary"
+    if text.startswith(_TASK_PREFIX):
+        return "task"
+    return default
+
+
 def _request_text_blocks(messages: list) -> list[TextBlock]:
-    """收集请求内全部文本块（控件树/任务/摘要/工具结果/对话/思考），按角色标注。
+    """收集请求内全部文本块并按渠道归类（task/ui/summary/note/feedback）。
 
     dict 块与 SDK 块两种形态都收（assistant 历史存的是 SDK 对象）；只取字面文本，
-    不做归一化——出处判定在 provenance.find_substantiation。图像槽无文本，跳过。
+    不做归一化——出处判定在 provenance.check_value。图像槽无文本，跳过。
+    观察文本嵌在 tool_result 内部也按前缀归 "ui"（屏幕文案不算提交值出处）。
     """
     out: list[TextBlock] = []
 
@@ -264,7 +282,7 @@ def _request_text_blocks(messages: list) -> list[TextBlock]:
             return
         if isinstance(block, str):
             if block:
-                out.append(TextBlock(kind, block))
+                out.append(TextBlock(_text_kind(block, kind), block))
             return
         if isinstance(block, (list, tuple)):
             for b in block:
@@ -418,7 +436,7 @@ class Agent:
                 },
             }
 
-        head = f"[当前 {screen}]"
+        head = f"{_OBS_PREFIX}{screen}]"
         if nodes is not None:
             body = (
                 f"控件清单（包围盒 [l,t][r,b]，点击用中心点）：\n{ui_text}"
@@ -485,8 +503,10 @@ class Agent:
     def _provenance_gate(self, text: str) -> str | None:
         """provenance_gate=True 时检查 type_text 提交值；返回拦截文本或 None。
 
-        出处 = 请求内全部文本（控件树/摘要/任务/对话与思考——自发抄录通路）；
-        唯一例外是当前响应的 tool_use 参数：提交值不能拿自己的回显自证。
+        出处 = 请求内合法渠道文本（任务/摘要/对话与思考——自发抄录通路/工具反馈）；
+        控件树文本与当前响应的 tool_use 参数不算（提交值不能拿自己的回显自证）。
+        另：当前屏输入框的占位提示/标签是问题文案，与其相等的值无视转录出处
+        一律拦下（pg-preflight-2 实测：转录通路会「洗白」屏幕文案）。
         帧状态（本次请求保留/逐出/已蒸馏）决定候选步排序。全程不读 ground truth。
         首次无出处提交被拦下并浮出可回看候选步；重提同一值 = 显式确认放行
         （记 override），与 confirm_and_tap 的二次确认对偶。
@@ -514,22 +534,27 @@ class Agent:
                          distilled=s in self._summary_seen)
             for s in sorted(self._image_blocks)
         ]
-        finding = check_value(value, blocks, steps)
+        questions = tuple(n.label for n in (self._nodes or [])
+                          if "EditText" in (n.cls or ""))
+        finding = check_value(value, blocks, steps, question_texts=questions)
         if not finding.trigger:
-            self._log_gate(value, trigger=False, action="pass")
+            self._log_gate(value, trigger=False, action="pass", finding=finding)
             return None
         self._gate_seen.add(value)
-        self._log_gate(value, trigger=True, action="blocked",
+        self._log_gate(value, trigger=True, action="blocked", finding=finding,
                        candidates=list(finding.review_candidates),
                        reasons=list(finding.reasons))
         return format_gate_response(finding)
 
     def _log_gate(self, value: str, *, trigger: bool, action: str,
-                  candidates: list | None = None, reasons: list | None = None) -> None:
+                  candidates: list | None = None, reasons: list | None = None,
+                  finding=None) -> None:
         if self.run_log:
-            self.run_log.log_gate(step=self._step, value=value, trigger=trigger,
-                                  action=action, candidates=candidates,
-                                  reasons=reasons)
+            self.run_log.log_gate(
+                step=self._step, value=value, trigger=trigger, action=action,
+                candidates=candidates, reasons=reasons,
+                trigger_reason=getattr(finding, "trigger_reason", "") or "",
+                matched_kinds=[b.kind for b in getattr(finding, "matches", ())])
 
     # ---------- 工具执行 ----------
 
@@ -837,7 +862,10 @@ class Agent:
         content0 = []
         if image is not None:
             content0.append({"type": "_image_slot", "step": 0})
-        content0.append({"type": "text", "text": f"任务：{task}\n\n{text}"})
+        # 任务与观察分块：任务是合法出处渠道，观察（控件树）不是——混在一块会让
+        # _text_kind 的前缀嗅探把任务也归成 "ui"（见 provenance 渠道规则）。
+        content0.append({"type": "text", "text": f"{_TASK_PREFIX}{task}"})
+        content0.append({"type": "text", "text": text})
         self._messages.append({"role": "user", "content": content0})
         self._log_observation(0, meta)
         if self.run_log:
@@ -950,7 +978,7 @@ class Agent:
                     last["content"].append({
                         "type": "text",
                         "text": (
-                            f"[视觉记忆摘要（蒸馏自已丢弃的第 "
+                            f"{_SUMMARY_PREFIX}（蒸馏自已丢弃的第 "
                             f"{'、'.join(map(str, src_steps))} 步截图）]\n{summary_text}"
                         ),
                     })

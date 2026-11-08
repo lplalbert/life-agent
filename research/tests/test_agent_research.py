@@ -492,7 +492,8 @@ class ProvenanceGateBoundary(unittest.TestCase):
     def test_unsubstantiated_value_blocked_then_override(self):
         agent = self._agent()
         agent._messages = [{"role": "user", "content": [
-            {"type": "text", "text": "任务：购买商品\n控件清单：输入框"}]}]
+            {"type": "text", "text": "任务：购买商品"},
+            {"type": "text", "text": "[当前 输入页]\n控件清单：输入框"}]}]
         agent._image_blocks = {0: {"type": "image"}}
         agent._last_sent_steps = []                       # 横幅帧已逐出
         with self.assertRaises(GateRefusal) as ctx:
@@ -505,11 +506,63 @@ class ProvenanceGateBoundary(unittest.TestCase):
         self.assertEqual(agent.phone.typed, ["W3JG"])
 
     def test_substantiated_value_passes(self):
+        # 出处走摘要渠道（记忆渠道才算）；ASCII 大小写不敏感
         agent = self._agent()
         agent._messages = [{"role": "user", "content": [
-            {"type": "text", "text": "任务：输入信息\n控件清单：横幅 内容：会员日 W3JG"}]}]
-        out = agent._dispatch("type_text", {"text": "w3jg"})   # ASCII 大小写不敏感
+            {"type": "text", "text": "任务：输入信息"},
+            {"type": "text", "text": "[当前 输入页]\n控件清单：输入框"},
+            {"type": "text", "text": "[视觉记忆摘要（蒸馏自已丢弃的第 0 步截图）]\n"
+                                     "横幅：会员日 W3JG"}]}]
+        out = agent._dispatch("type_text", {"text": "w3jg"})
         self.assertIn("已通过", out)
+        self.assertEqual(agent.phone.typed, ["w3jg"])
+
+    def test_placeholder_hint_from_ui_never_substantiates(self):
+        # 实测失败通路（pg-preflight-1）：把输入框提示「会员日优惠码」当答案打字——
+        # 提示语住在控件树文本（ui 渠道），不算出处，必须拦下
+        agent = self._agent()
+        agent._messages = [{"role": "user", "content": [
+            {"type": "text", "text": "任务：购买商品"},
+            {"type": "text", "text": "[当前 结算页]\n"
+                                     "控件清单：EditText hint=会员日优惠码 按钮：提交订单"}]}]
+        with self.assertRaises(GateRefusal):
+            agent._dispatch("type_text", {"text": "会员日优惠码"})
+        self.assertEqual(agent.phone.typed, [])          # 占位提示不得当答案写入
+
+    def test_field_placeholder_blocks_despite_recital_laundering(self):
+        # pg-preflight-2/3：占位提示（或其片段）被抄进思考/摘要后「洗白」成出处
+        # 而放行——字段语义规则兜底：V 属于当前屏输入框占位提示文案时无视一切
+        # 转录出处
+        for value in ("会员日优惠码", "会员日"):
+            agent = self._agent()
+            agent._nodes = [UINode(text="会员日优惠码", desc="", rid="",
+                                   cls="android.widget.EditText",
+                                   clickable=True, bounds=(0, 0, 100, 100))]
+            recital = thinking_block(f"提示是会员日优惠码，输入{value}试试")
+            cur = tool_use("t1", "type_text", {"text": value})
+            agent._messages = [
+                {"role": "user", "content": [
+                    {"type": "text", "text": "任务：购买商品"},
+                    {"type": "text", "text": "[视觉记忆摘要（蒸馏自已丢弃的第 0 步截图）]\n"
+                                             "结算页输入框提示：会员日优惠码"}]},
+                {"role": "assistant", "content": [recital, cur]},
+            ]
+            with self.assertRaises(GateRefusal) as ctx:
+                agent._dispatch("type_text", {"text": value})
+            self.assertIn("占位提示", str(ctx.exception), value)
+            self.assertEqual(agent.phone.typed, [], value)
+
+    def test_field_placeholder_rule_only_for_input_nodes(self):
+        # 同名标签出现在普通控件上不触发占位规则（有任务出处即放行）
+        agent = self._agent()
+        agent._nodes = [UINode(text="会员日优惠码", desc="", rid="",
+                               cls="android.widget.Button",
+                               clickable=True, bounds=(0, 0, 100, 100))]
+        agent._messages = [{"role": "user", "content": [
+            {"type": "text", "text": "任务：输入「会员日优惠码」参加活动"}]}]
+        out = agent._dispatch("type_text", {"text": "会员日优惠码"})
+        self.assertIn("已通过", out)
+        self.assertEqual(agent.phone.typed, ["会员日优惠码"])
 
     def test_short_value_never_blocked(self):
         agent = self._agent()
