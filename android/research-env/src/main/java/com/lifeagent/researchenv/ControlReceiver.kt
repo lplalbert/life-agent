@@ -17,6 +17,8 @@ import org.json.JSONObject
  *               --es confusion_at <enter_cart|enter_checkout>
  *               --es expected_ids <p1,p3> --es initial_cart <p2>
  *               --es catalog_size <1..8>（默认 4） --es promo_rearm <true|false>（默认 false）
+ *               --es promo_clue_round <n>（线索在第 n 轮武装，默认 1）
+ *               --es promo_gate_after <n>（第 n 轮起结算须码，默认 0=立即闸）
  *               复位后写 state.json，post_reset_clean 供独立探针确认。
  *   cmd=state   只重写 state.json（不改业务状态），供控制器随时读取 ground truth。
  *
@@ -42,6 +44,8 @@ class ControlReceiver : BroadcastReceiver() {
                 strList(intent.getStringExtra("initial_cart"))?.let { cfg.put("initial_cart", JSONArray(it)) }
                 intent.getStringExtra("catalog_size")?.let { cfg.put("catalog_size", it.toIntOrNull() ?: 4) }
                 intent.getStringExtra("promo_rearm")?.let { cfg.put("promo_rearm", it.equals("true", ignoreCase = true)) }
+                intent.getStringExtra("promo_clue_round")?.let { cfg.put("promo_clue_round", it.toIntOrNull() ?: 1) }
+                intent.getStringExtra("promo_gate_after")?.let { cfg.put("promo_gate_after", it.toIntOrNull() ?: 0) }
                 EnvState.reset(appCtx, cfg)
             }
             else -> EnvState.writeState(appCtx) // 未知命令不改状态，仅刷新快照
