@@ -442,6 +442,14 @@ arXiv 检索（经 7892 代理）发现相邻工作密集，直接影响新颖�
 
 **残余**：结构性修复（API 建连不隐式依赖系统代理——trust_env=False 或显式通路参数）待批次完结后做；跑中改被导入模块违反冻结与臂内一致性，记入下一协议版本。教训：**模型 API 的网络通路是实验环境的一部分，须显式固定（不隐式依赖系统代理）**。
 
+## 2026-11-09 曲线批次第二段：模拟器 system_server 假死与重启
+
+**事故（观测）**：第一段 4 条成功后（含 t1r8s1g1-ev2pg 8/8 轮 570K 输入的最长任务），[13] t1r8s2g1-recent1sum3（K=8，22 分钟）completed 但 recovered=False（rounds 4/8，**曲线首条真实数据点**：蒸馏臂在长任务断轮，非环境非闸门）；其后 30 条 reset 即败 `cmd: Can't find service: activity`——模拟器 system_server 假死（WindowManager 活着、ActivityManager 丢失），host GPU 渲染崩溃（ColorBuffer 报错风暴）+ load average ~7 为伴生信号。续跑一段（33.8s 跑 0 条）确认非瞬时。
+
+**处置**：TaskStop 停模拟器进程 → 同参数重启（零语义变化，episode 数据全在主机盘）→ 验收后续跑。**验收教训**：`sys.boot_completed=1` 不等于服务就绪——activity 服务注册晚于 boot 标志，须 `service check activity` 显示 found 才可跑（本次 boot 后首次检查 0 命中、15s 后 found）。research-env APK 在 userdata 持久保留（重启后 `pm list packages` 确认在）。
+
+**归因类**：环境故障（模拟器系统假死）——ANR、感知竞态、网络通路之后第四实证。30 条失败留档零 token 损失，续跑自动重试。
+
 ## 下一执行顺序
 
 1. 【完成】阶段 C：运行级 JSONL、成功后重试修正、冻结经验与三种上下文策略；请求协议和敏感动作边界验证。
