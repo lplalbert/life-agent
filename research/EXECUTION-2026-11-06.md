@@ -378,6 +378,24 @@ arXiv 检索（经 7892 代理）发现相邻工作密集，直接影响新颖�
 
 数据产物：`research/results/flash-batch6.json`（本地）；episode 原始目录 `runs/episodes/{i01..i12}-c5-recent1sum6b`（本地保留，不清理）。
 
+## 2026-11-09 PG preflight（pg-preflight-1→4：两次 gate miss、修正与闭环验证）
+
+同一配置（task_seed=4/fault_seed=4/promo/expected=p1，recent1retrpg 口径：recent+1 图+retrieval+PG，20 步）四次预检，规则两度修正：
+
+| 预检 | 规则版本 | gate 观察 | 业务 |
+|---|---|---|---|
+| pg-preflight-1（11-08） | 通用字面出处 | 「会员日优惠码」pass（字面命中控件树文本） | fail |
+| pg-preflight-2 | + 渠道化出处（ui 不算） | 「会员日优惠码」仍 pass（step 10）+ 拼音垃圾 ×2 | fail |
+| pg-preflight-3 | + 归因仪表 | 「会员日」pass（matched_kinds=note×6） | fail |
+| pg-preflight-4 | + 占位提示规则（含片段） | 「会员日优惠码」**blocked**（field_placeholder，note×5）→ `review_screenshot(step 0)` → 「QV6T」pass（note 自发抄录） | **success / recovered** |
+
+- **修正 1（渠道化出处）**：控件树文本（ui）不构成提交值出处，合法渠道 = task/summary/note/feedback；消息文本前缀统一归类（`任务：`/`[当前 ` /`[视觉记忆摘要`，构造与归类共用常量），content0 任务/观察分块。动机 = 占位提示住在 ui 的实测失败通路（批 5 nudge 失利 ×2、批 6 i03/i12、pg-preflight-1）。
+- **pg-preflight-2 观察**（渠道过滤后仍放行）→ 推断「转录洗白」：屏幕文案被抄进思考/工具回显后成了「出处」。由 preflight-3 的 matched_kinds 仪表坐实（note 转录 ×6）。
+- **修正 2（占位提示规则 / 字段语义）**：V 属于当前屏输入框（EditText）占位提示/标签文案（相等或片段）→ 无视一切转录出处直接拦下（`trigger_reason="field_placeholder"`，专用文案「问题文案不是答案」）；gate 事件新增 trigger_reason/matched_kinds 归因字段。片段条款由 preflight-3 的「会员日」催生（等值 → 包含）。
+- **pg-preflight-4（终验）**：step 8 拦截后模型依指路 review_screenshot(0) 取证横幅帧 → step 10 输真码 QV6T（note 自发抄录，横幅像素通路未被规则误伤）→ 提交成功，finish 自述出处「商城首页红色横幅」。**PG 局面首个 recovered=True**。
+- **残余限制**：拼音转写垃圾（huiyuanri 等）非屏幕文案抄录，字面规则不拦（业务失败，非闸门缺陷）；占位提示内嵌建议词的误拦限制见 docs §4.1（research-env 无此类提示）。
+- 测试 109/109（新增 ChannelPolicy/PlaceholderRule/agent 级占位提示与转录洗白共 14 测）。token 四类（未缓存输入/缓存读/缓存写/输出）：p2 62,523/129,792/0/15,475；p3 44,258/28,800/0/4,159；p4 66,731/29,440/0/4,924。episode 原始目录 `runs/episodes/pg-preflight-{1..4}` 本地保留不清理。
+
 ## 下一执行顺序
 
 1. 【完成】阶段 C：运行级 JSONL、成功后重试修正、冻结经验与三种上下文策略；请求协议和敏感动作边界验证。
@@ -387,8 +405,8 @@ arXiv 检索（经 7892 代理）发现相邻工作密集，直接影响新颖�
 5. 【完成】批次 3 五臂已成稿（60/60）：摘要蒸馏 11/12 全走「码入摘要」通道、显式取回仅 4/24 自发调用（4/4 功效）、关键帧 1/12+0/12；截断残缺文本修复 + 上限 1200（40/40 测试）。
 6. 【完成】批次 4 消融四臂已成稿（48/48，2.48M 输入/196K 输出）：四臂 11–12/12 近满分、互相不可区分，蒸馏是唯一承载组件（41/47 摘要抄录、6/47 取回钉住、0 被动保留）；两例失败均离机制（清单多带预置商品 / ask_human 早退）。仅重试=recent1 走既有 0/12。
 7. 【完成】批次 5 已成稿（48/48，未缓存输入 2.15M/输出 222K/缓存读 2.49M）：M 扫参 M=2/3=12/12、M=6=9/12（含截断混杂，拟 recent1sum6b 效度复核）；nudge A/B 恢复 2/12→10/12、取回调用 2/12→8/12（调后 8/8 成），失利 2 例=零取回把占位提示当答案。详见「批次 5 结果」节。
-8. 【核心已实现，挂钩待接】创新方法与价值域实验：**Provenance Gate（证据溯源闸门）** 把三路归因机制变成动作时刻的闭环（无出处值→浮出可回看取证，不注入答案、不依赖 ground truth），对 ECHOES（arXiv:2610.22408，训练期特权蒸馏、部署丢像素）差异化为免训练/可取回/冻结权重可用；价值域 = 长任务族 T1–T3 × 历史长度/预算曲线，预算墙判据预声明（上下文 ≥90% 或成本 ≥3×）。见 [docs/provenance-gate-and-value-domain-2026-11-08.md](../docs/provenance-gate-and-value-domain-2026-11-08.md)。nudge 失利通路（批 5 nudge 臂 2 例 + 批 6 i03/i12）两处独立出现「占位提示当答案、0 取回」= 硬触发动机。判定核心 + 闸门响应文本已实现（life_agent/provenance.py，含 override 语义设计）；agent.py type_text 挂钩（默认关）待接。随后顺序：PG preflight → 长任务族+预算曲线 → 3 种子全量+聚类统计 → 第二 backbone → AndroidWorld → 写作定位。
-9. 【基本完成，余接线】效度与使能衔接：recent1sum6b 复核已成稿（截断伪影成立 + 第二失效机制「批量内容遗漏」，M≤3 结论不变）；长任务族 manifest/verdict 已实现（T1–T3 规格生成、真实复位条件解析、逐单判分，19 测试，全套 87/87），ControlReceiver 已补 promo_clue_round/promo_gate_after 透传（源码）。余：PG agent.py 挂钩（默认关）+ preflight；research-env APK 重建安装（长任务族使能源码已落：订单账本、catalog_size、下单即表单作废）；T1–T3 预算曲线批次。
+8. 【实现 + preflight 闭环验证完成】创新方法与价值域实验：**Provenance Gate（证据溯源闸门）** 把三路归因机制变成动作时刻的闭环（无出处值→浮出可回看取证，不注入答案、不依赖 ground truth），对 ECHOES（arXiv:2610.22408，训练期特权蒸馏、部署丢像素）差异化为免训练/可取回/冻结权重可用；价值域 = 长任务族 T1–T3 × 历史长度/预算曲线，预算墙判据预声明（上下文 ≥90% 或成本 ≥3×）。见 [docs/provenance-gate-and-value-domain-2026-11-08.md](../docs/provenance-gate-and-value-domain-2026-11-08.md)。判定核心（渠道化出处 + 占位提示字段语义规则）+ agent.py type_text 挂钩（默认关）+ gate 归因仪表已实现，pg-preflight-1→4 两次 gate miss 两度修正后终验闭环成立（拦占位提示→指路取证→真码恢复，recovered=True）。随后顺序：PG A/B 批次（recent1retrpg vs recent1retrnudge）→ 长任务族+预算曲线 → 3 种子全量+聚类统计 → 第二 backbone → AndroidWorld → 写作定位。
+9. 【基本完成，余预算曲线批次】效度与使能衔接：recent1sum6b 复核已成稿（截断伪影成立 + 第二失效机制「批量内容遗漏」，M≤3 结论不变）；长任务族 manifest/verdict 已实现（T1–T3 规格生成、真实复位条件解析、逐单判分），ControlReceiver 已补 promo_clue_round/promo_gate_after 透传，research-env APK 已构建并安装（2026-11-09，含订单账本、catalog_size、下单即表单作废），run_episode 已接 task_builder/verdict_fn 钩子（longtask_runner 可跑）。余：longtask dry-run → T1–T3 预算曲线批次（启动后 runner 模块冻结）。
 10. 阶段 F AndroidWorld 泛化验证；实体机与商业 App 后置可选。
 
 研究产物均为新增文件；未覆盖既有 Android 源码、调研报告、交接文档或凭证。2026-11-09 经用户确认整理推送至 github.com:lplalbert/life-agent（公开仓库，含 docs/ 研究计划）；凭证核验：android/local.properties 与 .env 未入库、提交树无 token 串。未投稿。
