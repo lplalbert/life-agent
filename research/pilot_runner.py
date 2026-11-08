@@ -115,6 +115,10 @@ POLICY_VARIANTS = {
     "recent1sum3fx": ("recent", 1, {"summarize_every": 3}),
     "recent1sum6": ("recent", 1, {"summarize_every": 6}),
     "recent1retrnudge": ("recent", 1, {"retrieval": True, "retrieval_nudge": True}),
+    # 批次 6（效度复核）：recent1sum6b = M=6 在批量感知输出预算下重跑
+    # （max_tokens 随候选帧数放宽 ≥400/帧，≤3 帧仍 1200）。批次 5 的 recent1sum6
+    # 失利含「固定 1200 上限 × 6 帧批量」截断伪影，此臂分离「频率不足」与「截断」两解。
+    "recent1sum6b": ("recent", 1, {"summarize_every": 6}),
 }
 
 POLICIES = ("full", "recent", "evidence")

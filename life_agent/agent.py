@@ -207,9 +207,19 @@ RETRIEVAL_NUDGE = (
     "可以随时取回。不要凭猜测填值，也不要在还能取证时放弃。"
 )
 
-SUMMARY_MAX_TOKENS = 1200  # 摘要蒸馏调用输出上限：MiMo 默认先输出 thinking 且随候选帧数
-# 增长（实测 3 帧 387–436、9 帧 752 token，800 时 3/38 调用仍截断）；1200 留余量，
-# 截断兜底靠「截断=蒸馏失败、下次重试」语义，上限只是硬界不是目标
+SUMMARY_MAX_TOKENS = 1200       # ≤3 帧批量的蒸馏输出上限（M=2/3 既有语义不变）
+SUMMARY_TOKENS_PER_FRAME = 400  # >3 帧时按帧放宽
+
+
+def _summary_max_tokens(n_frames: int) -> int:
+    """蒸馏输出上限随候选帧数放宽。
+
+    MiMo 蒸馏调用默认先输出 thinking 且随候选帧数增长（实测 3 帧 387–436、
+    9 帧 752 token）；固定 1200 上限会把 6 帧批量（M=6）整批截断成蒸馏失败
+    ——批次 5 recent1sum6 失利的效度混杂源。≤3 帧维持 1200，与既有语义一致。
+    截断兜底仍是「截断=蒸馏失败、下次重试」，上限只是硬界不是目标。
+    """
+    return max(SUMMARY_MAX_TOKENS, SUMMARY_TOKENS_PER_FRAME * max(n_frames, 1))
 
 
 @dataclass
@@ -669,7 +679,7 @@ class Agent:
         try:
             with self.client.beta.messages.stream(
                 model=self.model,
-                max_tokens=SUMMARY_MAX_TOKENS,
+                max_tokens=_summary_max_tokens(len(candidates)),
                 system=self.SUMMARY_SYSTEM,
                 messages=[{"role": "user", "content": content}],
             ) as stream:

@@ -18,7 +18,7 @@ if str(ROOT) not in sys.path:
 
 from PIL import Image
 
-from life_agent.agent import RETRIEVAL_NUDGE, Agent
+from life_agent.agent import RETRIEVAL_NUDGE, SUMMARY_MAX_TOKENS, Agent, _summary_max_tokens
 from life_agent.phone import PhoneError, UINode
 from life_agent.runlog import RunLogger, validate_request
 from research.context_policy import select
@@ -665,6 +665,23 @@ class SummaryDistillationBaseline(unittest.TestCase):
         sent_texts = [t for msg in client.calls[4]["messages"]
                       for t in SummaryDistillationBaseline._texts(msg.get("content"))]
         self.assertTrue(any("视觉记忆摘要" in t for t in sent_texts))
+
+
+class SummaryBudgetScaling(unittest.TestCase):
+    """蒸馏输出上限随批量帧数放宽（M=6 截断伪影的效度修复）。"""
+
+    def test_budget_unchanged_for_small_batches(self):
+        # ≤3 帧 = M=2/3 既有语义（1200），改动不得影响旧臂
+        for n in (1, 2, 3):
+            self.assertEqual(_summary_max_tokens(n), SUMMARY_MAX_TOKENS)
+
+    def test_budget_scales_with_large_batches(self):
+        self.assertEqual(_summary_max_tokens(6), 2400)
+        self.assertEqual(_summary_max_tokens(9), 3600)
+
+    def test_budget_floor_and_defensive_zero(self):
+        self.assertGreaterEqual(SUMMARY_MAX_TOKENS, 1200)
+        self.assertEqual(_summary_max_tokens(0), SUMMARY_MAX_TOKENS)
 
 
 if __name__ == "__main__":
