@@ -417,6 +417,21 @@ arXiv 检索（经 7892 代理）发现相邻工作密集，直接影响新颖�
 - **成本判读**：PG 臂输入/输出均略低于 nudge（1.21M/88K vs 1.25M/100K）——24 次取回的增量成本小于失败长尾烧掉的 token；闸门没有带来成本惩罚。
 - 产物：`research/results/pg-ab-batch.json`（逐 episode 判分/gate 事件/归因）、`runs/episodes/i{01..24}-c5-{recent1retrpg,recent1retrnudgeb}/` 本地保留不清理。
 
+## 2026-11-09 长任务 preflight 感知竞态事故与修复
+
+**事故（观测）**：longtask preflight 第一条 t1r4s2g1 的 step00.png = 桌面启动器——app 冷启动慢于 open_app 固定 1.2s sleep（长时间空闲后首跑），画布横幅从未入帧即被首动作过期，证据不可感知；若不修复，曲线实验的失败将混入环境伪影。**竞态偶发非结构性**：同批 t1r2s2g1 的 step00.png 完美捕获横幅「会员日 · 优惠码 CS3J」；短任务 108 条 c5 扫描基本无此问题。全 48 条 PG A/B 扫描 ANR 仅 i19 一例（上节），长任务首条即撞冷启动竞态——长历史任务对环境就绪更敏感。
+
+**归因链**：step00.png=桌面 → summary「第0步=启动页」→ env_control 固定 sleep 无前台保证 → state.json episode_id 是复位就绪信号（ControlReceiver 复位即回写，无 startActivity 依赖）→ ep2 完美对照坐实冷启动偶发。定性：**环境故障（感知竞态）**，归因四分类中「环境故障」的第二实证（第一例=ANR）。
+
+**修复（生产边界，af552e2）**：
+- 复位「完成」=state.json episode_id 对账：`broadcast_reset` 等 `_wait_state_episode`（轮询 read_state 直到 episode_id 对上，10s 超时抛「复位未生效」；无 episode 参数退固定等待 0.6s）。
+- app「可观测」=前台焦点确认：`open_app` 轮询 `dumpsys window | grep mCurrentFocus` 直到 PKG 命中 + 0.5s 渲染安定，10s 超时抛「app 未取得前台焦点」——首帧即 app 首屏，横幅必入帧。
+- 测试：research/tests/test_env_control.py 5 个语义用例（复位等待/超时/无 episode 退化、焦点等待/超时），unittest 全套件 114/114。
+
+**留档（不清理）**：竞态污染的 t1r4s2g1-promo-recent1sum3（completed，未缓存输入 205K 留档计入事故成本）归档至 `runs/episodes/archive-2026-11-09-preflight-race/`——不归档会被曲线续跑当 completed 跳过。其余 8 条 T1 dry_reset_ok 目录不挡 live（live 只跳过 completed，stale run*/step* 自动归档 attempt-<ts>/）。
+
+**复验（通过）**：重跑 preflight 2 条 T1 recent1sum3——t1r4s2g1 / t1r2s2g1 的 step00.png 均含横幅「会员日 · 优惠码 CS3J」（首帧即 app 首屏，与事故时桌面截图直接对照；同 fault_seed 决定论同码）；两条均 completed/recovered=True（rounds 4/4、2/2，triggered=1），token 四类 161,757/238,208/0/10,263 与 70,005/49,536/0/5,062。被杀残留自动归档 attempt-<ts>/ 可见。修复闭环成立，曲线批次启动。
+
 ## 下一执行顺序
 
 1. 【完成】阶段 C：运行级 JSONL、成功后重试修正、冻结经验与三种上下文策略；请求协议和敏感动作边界验证。
