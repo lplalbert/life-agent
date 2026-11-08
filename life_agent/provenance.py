@@ -1,4 +1,6 @@
-"""证据出处账本：Provenance Gate 的判定核心（纯函数，无模型/设备/ground truth）。
+"""证据出处账本：Provenance Gate 的判定核心（agent 侧能力，纯函数）。
+
+无模型/设备/ground truth 依赖；research 实验与产线 agent 共用此模块。
 
 问题：agent 即将提交的值 V，在本次请求的证据文本里有没有出处？
 - 有出处（V 出现在某步控件树文本 / 摘要文本 / 应用提示文本）→ 不打扰；

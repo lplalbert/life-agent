@@ -8,9 +8,9 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from research.provenance import (MIN_VALUE_CHARS, ProvenanceFinding, StepEvidence,
-                                 TextBlock, check_value, find_substantiation,
-                                 rank_review_candidates)
+from life_agent.provenance import (MIN_VALUE_CHARS, ProvenanceFinding, StepEvidence,
+                                   TextBlock, check_value, find_substantiation,
+                                   rank_review_candidates)
 from dataclasses import FrozenInstanceError
 
 
