@@ -55,11 +55,12 @@ def _split_episode_id(ep_id: str) -> tuple[str, str] | None:
     return None
 
 
-def load_arm(episodes_dir: Path, arm: str) -> tuple[dict[str, dict], list[dict]]:
+def load_arm(episodes_dir: Path, arm: str, id_prefix: str = "") -> tuple[dict[str, dict], list[dict]]:
     """配对键 → episode 摘要（只收带业务判分 verdict 的记录）；同键取字典序最后的目录。
 
     无 verdict 的记录（dry-run、invalid_reset、未跑完）进 skipped 桶单列留档，
-    不进恢复率分母也不静默丢弃。
+    不进恢复率分母也不静默丢弃。id_prefix 过滤 episode 配对键（t=长任务、i=pilot），
+    防不同实验的同名臂混入同一配对表。
     """
     out: dict[str, dict] = {}
     skipped: list[dict] = []
@@ -72,6 +73,8 @@ def load_arm(episodes_dir: Path, arm: str) -> tuple[dict[str, dict], list[dict]]
         if parsed is None:
             continue
         key, family = parsed
+        if id_prefix and not key.startswith(id_prefix):
+            continue
         if "verdict" not in rec:
             skipped.append({"dir": d.name, "status": rec.get("status")})
             continue
@@ -139,14 +142,16 @@ def main(argv: list | None = None) -> int:
     ap.add_argument("--arm", required=True, help="实验臂 episode 后缀（如 recent1retrpg）")
     ap.add_argument("--vs", required=True, help="对照臂 episode 后缀")
     ap.add_argument("--cluster", choices=("family", "instance"), default="family")
+    ap.add_argument("--id-prefix", default="",
+                    help="episode 配对键前缀过滤（t=长任务、i=pilot），防跨实验同名臂混入")
     ap.add_argument("--boot", type=int, default=10_000)
     ap.add_argument("--seed", type=int, default=20261107)
     ap.add_argument("--out", type=Path, default=None,
                     help="结果 JSON 路径（默认 research/results/stats-<arm>-vs-<vs>.json）")
     args = ap.parse_args(argv)
 
-    a, skipped_a = load_arm(args.episodes, args.arm)
-    b, skipped_b = load_arm(args.episodes, args.vs)
+    a, skipped_a = load_arm(args.episodes, args.arm, args.id_prefix)
+    b, skipped_b = load_arm(args.episodes, args.vs, args.id_prefix)
     keys = sorted(set(a) & set(b))
     only_a, only_b = sorted(set(a) - set(b)), sorted(set(b) - set(a))
 
