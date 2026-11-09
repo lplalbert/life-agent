@@ -454,6 +454,22 @@ arXiv 检索（经 7892 代理）发现相邻工作密集，直接影响新颖�
 
 **systemui 反复 ANR 与弹窗治理（同日）**：swiftshader 后续跑 30 条仍全挂同一闸——诊断序列（probe 复位→episode 复位→open_app）复现坐实：**systemui 反复 ANR、`Application Not Responding` 弹窗独占 mCurrentFocus**（app 始终 topResumed，焦点闸 fail-closed 正确拦下；back/enter/force-stop systemui 均无法关闭弹窗）。处置：`settings put global hide_error_dialogs 1`（headless 长跑环境隐藏系统错误对话框，ANR 事件照常入 logcat）+ `uiautomator dump` 定位「Close app」按钮 (540,1236) 点掉存量弹窗，焦点回 research-env，诊断序列 open_app 通过。教训两条：**焦点闸验收不能只看 topResumed——mCurrentFocus 可能被系统弹窗独占；headless 批跑环境须 hide_error_dialogs=1 并在批前清点存量弹窗**。
 
+## 2026-11-09 T1–T3 预算曲线批次（45/45，价值域第一轮）
+
+15 specs（T1 K∈{2,4,8}×3 种子、T2×3、T3×3）× 3 臂（full / recent1sum3 / ev2sum3retrpg）同 fault_seed 配对，order-seed 20261107。四段跑完（中途四类环境故障留档重试：API 代理断连 36 条、模拟器假死 30 条、systemui ANR 弹窗 30 条×2，合计零/低 token 损失）。
+
+| 臂 | recovered | T1 | T2 | T3 | 未缓存输入 | 缓存读 | 输出 |
+|---|---|---|---|---|---|---|---|
+| full | 15/15 | 9/9 | 3/3 | 3/3 | 1,040,372 | **19,359,104** | 64,293 |
+| recent1sum3 | 14/15 | 8/9 | 3/3 | 3/3 | 2,415,592 | 6,736,512 | 190,228 |
+| ev2sum3retrpg | 15/15 | 9/9 | 3/3 | 3/3 | 3,434,955 | 7,395,200 | 208,174 |
+
+- **唯一失利**：t1r8s2g1-recent1sum3（K=8，rounds 4/8）；同 spec 的 full 与 ev2sum3retrpg 均 8/8 成——蒸馏臂在最长历史丢轮，PG 取证闭环补住（与 PG A/B「弱形式不够」一致）。
+- **T1 规模轴（K 轮均值 cache_read）**：full 198K→819K→**3.19M**（K=2→4→8，×4.1/×3.9 超线性）；recent1sum3 60K→271K→1.02M；ev2sum3retrpg 90K→273K→1.14M。**full 在 K=8 的历史装入是压缩臂的 3.1×**——成本墙信号成立方向；未缓存输入反向（full 1.04M < 压缩臂 2.4–3.4M，摘要蒸馏重写摘要产生成本），**成本墙判据「未缓存输入 ≥3×」在本轮不成立**——墙在缓存读/上下文装入侧，不在未缓存侧。
+- **配对检验（--id-prefix t，15 对/组）**：full vs recent1sum3 1 胜 0 负 14 平（p=0.5）；ev2sum3retrpg vs recent1sum3 同；full vs ev2pg 0 胜 0 负 15 平。**单种子 15 对下恢复率区分度不足**——区分在成本结构（与 pilot 方向门教训同构），恢复率区分需 3 种子加 N 或加大 K。
+- **上下文墙逼近率**待 run.jsonl 实测单请求长度（K=8 full 末步请求估计 ~300–400K tokens；MiMo 上限待核实）——墙位置的精确度量是下一轮补数。
+- 产物：`runs/episodes/t{1,2,3}*-promo-{full,recent1sum3,ev2sum3retrpg}/`（45 条目 + preflight 2 条同目录）、`research/results/stats-*-vs-*.json`（--id-prefix t 口径；pilot 同名臂混入的旧统计已由 1ab4c7e 工具修复分隔）。
+
 ## 下一执行顺序
 
 1. 【完成】阶段 C：运行级 JSONL、成功后重试修正、冻结经验与三种上下文策略；请求协议和敏感动作边界验证。
